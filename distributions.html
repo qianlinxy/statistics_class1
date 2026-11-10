@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="医学统计学分布互动课堂：正态、t、F、卡方、二项、泊松、多元正态、logit 分布，联动展示分布曲线、界值表与拒绝域，理解假设检验基本原理。">
+<meta name="theme-color" content="#17699b">
+<title>统计分布 · 学生练习入口</title>
+<style>
+:root{--blue:#17699b;--deep:#14577f;--pale:#eaf2fa;--ink:#243e54;--muted:#455d72;--line:#c5d3df;--purple:#6b55a2;--purple-pale:#f0ecf8;--wrong:#94354f;--wrong-pale:#fff1f5;--right:#1e7a4f;--right-pale:#eef8f2;--bg:#f4f7fb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.75 "PingFang SC","Microsoft YaHei","Noto Sans CJK SC",system-ui,sans-serif}
+h1,h2,h3,p{margin:0}
+button,input,select{font:inherit}
+button,select,summary{cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #70a4ca;outline-offset:3px}
+[hidden]{display:none!important}
+.masthead{background:linear-gradient(115deg,#17699b,#155d89);color:#fff}
+.topbar{display:flex;justify-content:space-between;gap:15px;align-items:center;max-width:1300px;margin:auto;padding:12px 28px;border-bottom:1px solid #ffffff35}
+.brand{font-size:15px;font-weight:600;letter-spacing:.3px}
+.brand-symbol{font:italic 27px Georgia,serif;margin-right:9px;vertical-align:-2px}
+.hero{padding:22px 20px 26px;text-align:center}
+.hero .eyebrow{font-size:12px;letter-spacing:2px;color:#eef7ff}
+.hero h1{font-size:34px;line-height:1.4;margin:5px 0 8px;font-weight:650}
+.hero p{font-size:16px;color:#f2f8ff}
+.hero .pill{display:inline-block;border:1px solid #ffffff65;border-radius:25px;padding:2px 14px;font-size:13px;margin-top:12px;margin-right:6px}
+.shell{max-width:1300px;margin:auto;padding:22px 26px 28px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.tabs button{border:1px solid var(--line);background:#fff;color:var(--deep);border-radius:9px;padding:8px 15px;font-size:14.5px}
+.tabs button.on{background:var(--blue);color:#fff;border-color:var(--blue);font-weight:600}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:22px;box-shadow:0 4px 18px #163b5a05}
+.card h2{font-size:21px;margin-bottom:4px}
+.card .sub{color:var(--muted);font-size:14.5px;margin-bottom:14px}
+.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,1fr);gap:20px}
+@media (max-width:900px){.grid2{grid-template-columns:1fr}}
+.panel{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#fbfdff}
+.panel h3{font-size:15.5px;margin-bottom:8px;color:var(--deep)}
+.ctl{display:flex;align-items:center;gap:10px;margin:8px 0;font-size:14px;flex-wrap:wrap}
+.ctl label{min-width:120px;font-weight:600}
+.ctl input[type=range]{flex:1;min-width:120px}
+.ctl .val{font-family:ui-monospace,Consolas,monospace;color:var(--blue);min-width:64px;text-align:right}
+table.crit{border-collapse:collapse;width:100%;font-size:13.5px;margin-top:6px}
+table.crit th,table.crit td{border:1px solid var(--line);padding:4px 8px;text-align:center;font-family:ui-monospace,Consolas,monospace}
+table.crit th{background:#dceaf5;color:var(--deep)}
+table.crit tr.hl{background:#fff3c9;font-weight:700}
+.svgbox{border:1px solid var(--line);border-radius:10px;padding:8px;background:#fff}
+/* 图内文字：西文/数字用 Times New Roman，中文回退楷体 */
+.svgbox text{font-family:"Times New Roman","Kaiti SC","STKaiti","KaiTi","楷体","KaiTi_GB2312",serif}
+.svgbox text.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.svgbox .ann{fill:#5a6f80}
+.svgbox .ann-title{font-weight:700}
+.legend{font-size:13px;display:flex;gap:16px;flex-wrap:wrap;margin-top:6px}
+.legend span b{display:inline-block;width:20px;height:10px;vertical-align:middle;margin-right:5px;border-radius:2px}
+.stat-input{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:10px;font-size:14.5px}
+.stat-input input{width:110px;border:1px solid #aebfd0;border-radius:6px;padding:6px 9px;font-size:15px;font-family:ui-monospace,Consolas,monospace}
+.verdict{margin-top:10px;border-radius:9px;padding:10px 14px;font-size:15px}
+.verdict.ok{background:var(--wrong-pale);border:1px solid #e3b6c4;color:var(--wrong);font-weight:600}
+.verdict.ns{background:var(--right-pale);border:1px solid #9fd3b6;color:var(--right)}
+.socratic{margin-top:12px;border:1px dashed #9fbdd4;border-radius:10px;background:var(--purple-pale);padding:12px 14px}
+.socratic .s-title{font-weight:600;color:var(--purple);font-size:14px}
+.socratic details{margin-top:8px}
+.socratic summary{font-size:14px;color:var(--purple);font-weight:600}
+.socratic p{font-size:14px;color:#4a3f6e;margin-top:6px}
+.formula{font-family:Georgia,serif;font-size:16px;background:var(--pale);border-radius:8px;padding:8px 14px;display:inline-block;margin:4px 0}
+.footer{max-width:1300px;margin:auto;padding:6px 28px 40px;font-size:14px;color:var(--muted)}
+.note{font-size:13.5px;color:var(--muted);margin-top:6px}
+.kbd{font-family:ui-monospace,Consolas,monospace;background:var(--pale);border:1px solid var(--line);border-radius:4px;padding:0 5px;font-size:13px}
+
+/* ===== 楷体署名 ===== */
+.dept-sign{
+  font-family: "Kaiti SC","STKaiti","KaiTi","楷体","KaiTi_GB2312",serif;
+  letter-spacing: 1px;
+}
+.masthead .dept-sign-top{
+  display:block;
+  margin-top:6px;
+  font-size:13.5px;
+  color:#dcecfa;
+  font-weight:500;
+}
+.footer-sign{
+  font-family: "Kaiti SC","STKaiti","KaiTi","楷体","KaiTi_GB2312",serif;
+  font-size:14.5px;
+  color:#14577f;
+  letter-spacing:1.2px;
+  font-weight:600;
+  text-align:center;
+  width:100%;
+  padding-top:14px;
+  margin-top:6px;
+  border-top:1px solid #dbe6ef;
+}
+</style>
+</head>
+<body>
+<header class="masthead">
+  <div class="topbar">
+    <div class="brand"><span class="brand-symbol">D</span>统计分布 · 医学统计学 · 互动课堂<span class="dept-sign dept-sign-top">中南大学 湘雅公共卫生学院 流行病与卫生统计学系</span></div>
+  </div>
+  <div class="hero">
+    <div class="eyebrow">看分布 · 查界值 · 定拒绝域 · 下结论</div>
+    <h1>分布 · 界值表 · 图形的联动课堂</h1>
+    <p>拖动滑块改变分布形态，界值表高亮当前行，图形同步显示拒绝域——假设检验的原理一目了然。</p>
+    <span class="pill">正态 · t · F · χ² · 二项 · 泊松 · 多元正态 · logit</span>
+    <span class="pill">α = 0.10 / 0.05 / 0.01</span>
+  </div>
+</header>
+
+<main class="shell">
+  <div class="tabs" id="tabs">
+    <button data-t="norm" class="on">正态分布</button>
+    <button data-t="t">t 分布</button>
+    <button data-t="chi2">χ² 分布</button>
+    <button data-t="F">F 分布</button>
+    <button data-t="binom">二项分布</button>
+    <button data-t="pois">泊松分布</button>
+    <button data-t="mvn">多元正态分布</button>
+    <button data-t="logit">logit 分布</button>
+    <button data-t="princ">假设检验原理</button>
+  </div>
+
+  <!-- ========== 正态 ========== -->
+  <section id="t-norm" class="card">
+    <h2>正态分布 N(μ, σ²)</h2>
+    <div class="sub">医学计量资料的「母分布」。改变 μ 平移曲线、改变 σ 拉伸曲线；界值 z 随 α 与单双侧变化，拒绝域即曲线下的阴影面积。</div>
+    <div class="grid2">
+      <div>
+        <div class="svgbox" id="svg-norm"></div>
+        <div class="legend"><span><b style="background:#17699b"></b>概率密度 f(x)</span><span><b style="background:#94354f"></b>拒绝域（P(Type I) = α）</span><span><b style="background:#1e7a4f"></b>|Z| ≥ 界值的区域</span></div>
+      </div>
+      <div>
+        <div class="panel">
+          <h3>参数与检验水准</h3>
+          <div class="ctl"><label>μ（均数）</label><input type="range" id="n-mu" min="-3" max="3" step="0.1" value="0"><span class="val" id="n-mu-v">0.0</span></div>
+          <div class="ctl"><label>σ（标准差）</label><input type="range" id="n-sd" min="0.4" max="2.5" step="0.1" value="1"><span class="val" id="n-sd-v">1.0</span></div>
+          <div class="ctl"><label>α（拖动）</label><input type="range" id="alpha-norm-s" min="0.005" max="0.20" step="0.005" value="0.05"><span class="val" id="alpha-norm-v">0.05</span></div>
+          <div class="ctl"><label>（快捷）</label>
+            <select id="alpha-norm"><option>0.10</option><option selected>0.05</option><option>0.01</option></select>
+            <span class="note" style="margin:0">α 越小，界值越靠尾部、拒绝域越小</span></div>
+          <div class="ctl"><label>检验方式</label>
+            <select id="tail-norm"><option value="2" selected>双侧</option><option value="1">单侧（右侧）</option><option value="1l">单侧（左侧）</option></select></div>
+        </div>
+        <div class="panel" style="margin-top:12px">
+          <h3>标准正态分布界值表（z 界值）</h3>
+          <table class="crit" id="crit-norm"></table>
+          <div class="note">黄色高亮 = 当前 α 与检验方式对应的界值。</div>
+        </div>
+        <div class="panel" style="margin-top:12px" id="n-shape"></div>
+        <div class="stat-input">
+          检验统计量 Z =
+          <input type="number" id="z-stat" step="0.01" value="1.96">
+          <button class="btn" onclick="judgeNorm()">判定是否落入拒绝域</button>
+        </div>
+        <div id="v-norm"></div>
+      </div>
+    </div>
+    <div class="socratic"><div class="s-title">继续想一想</div>
+      <details><summary>追问 1：μ、σ 都变了，标准化后 Z 分布为什么不改？</summary>
+        <p>标准化 Z=(x−μ)/σ 把任何正态分布都拉回 N(0,1)：μ 决定位置、σ 决定形状，而界值只与「分布形状标准化后的尾部面积」有关。这就是为什么一张 z 界值表能服务所有正态问题。</p></details>
+      <details><summary>追问 2：同样 α=0.05，为什么双侧界值 1.96 而单侧只用 1.645？</summary>
+        <p>双侧要把 α 平分到左右两个尾巴，每侧只承担 α/2=0.025，对应的界值必须更远离中心（1.96）；单侧把整个 α 放在一边（0.05），只需 1.645。看图形：阴影总面积相同，摆放方式不同。</p></details>
+      <details><summary>追问 3：参考值范围 ±1.96σ 与可信区间有什么本质不同？</summary>
+        <p>±1.96σ 描述的是<b>个体</b>观测值的分布（95% 参考值范围）；95% 可信区间描述的是<b>均数</b>这一参数的估计精度，用的是标准误 σ/√n。个体变异与均数抽样误差，两个概念不要混。</p></details>
+    </div>
+  </section>
+
+  <!-- ========== t ========== -->
+  <section id="t-t" class="card" hidden>
+    <h2>t 分布（Student's t）</h2>
+    <div class="sub">σ 未知、小样本时的主力分布。自由度 ν 越小尾部越厚（界值越大）；ν→∞ 时收敛为标准正态——观察表中 t 与 z 界值的差距如何消失。</div>
+    <div class="grid2">
+      <div>
+        <div class="svgbox" id="svg-t"></div>
+        <div class="legend"><span><b style="background:#17699b"></b>t 分布（当前 ν）</span><span><b style="background:#c5d3df"></b>标准正态 N(0,1)（虚线）</span><span><b style="background:#94354f"></b>拒绝域</span></div>
+      </div>
+      <div>
+        <div class="panel">
+          <h3>参数与检验水准</h3>
+          <div class="ctl"><label>自由度 ν</label><input type="range" id="t-df" min="1" max="120" step="1" value="10"><span class="val" id="t-df-v">10</span></div>
+          <div class="ctl"><label>α（拖动）</label><input type="range" id="alpha-t-s" min="0.005" max="0.20" step="0.005" value="0.05"><span class="val" id="alpha-t-v">0.05</span></div>
+          <div class="ctl"><label>（快捷）</label><select id="alpha-t"><option>0.10</option><option selected>0.05</option><option>0.01</option></select></div>
+          <div class="ctl"><label>检验方式</label><select id="tail-t"><option value="2" selected>双侧</option><option value="1">单侧（右侧）</option><option value="1l">单侧（左侧）</option></select></div>
+        </div>
+        <div class="panel" style="margin-top:12px">
+          <h3>t 界值表（末行为正态极限）</h3>
+          <table class="crit" id="crit-t"></table>
+          <div class="note">「双侧/正态」列 = t 界值 ÷ 1.96。ν→1 时高达 6 倍以上（尾部极厚），ν→∞ 收敛到 1.00。</div>
+        </div>
+        <div class="panel" style="margin-top:12px" id="t-shape"></div>
+        <div class="stat-input">
+          检验统计量 t =
+          <input type="number" id="tstat-stat" step="0.01" value="2.23">
+          <button class="btn" onclick="judgeT()">判定是否落入拒绝域</button>
+        </div>
+        <div id="v-t"></div>
+      </div>
+    </div>
+    <div class="socratic"><div class="s-title">继续想一想</div>
+      <details><summary>追问 1：为什么小样本时不能用 z 而必须用 t？</summary>
+        <p>Z=(x̄−μ)/(σ/√n) 的分母里 σ 未知，小样本只能用 S 代替，于是引入了额外的抽样误差——统计量不再服从 N(0,1)，而是尾部更厚的 t 分布。若仍用 z 界值，会<b>高估</b>检验结果有统计学意义的可能性。</p></details>
+      <details><summary>追问 2：ν=30 时 t<sub>0.05/2</sub>=2.042，与 1.96 只差 0.08——「n≥30 就用 z」这句话对吗？</summary>
+        <p>近似可以，但要明白这是<b>近似</b>而非相等。软件时代已无查表负担，直接报告精确 t 分布的 P 值更严谨。</p></details>
+      <details><summary>追问 3：什么时候用 ν=n−1，什么时候用别的自由度？</summary>
+        <p>单样本/配对差值：n−1；两独立样本方差齐：n₁+n₂−2；方差不齐（t′，Welch 近似）：校正自由度；回归系数：n−p−1。自由度的本质是「可自由变动的信息量」。</p></details>
+    </div>
+  </section>
+
+  <!-- ========== chi2 ========== -->
+  <section id="t-chi2" class="card" hidden>
+    <h2>χ² 分布（卡方分布）</h2>
+    <div class="sub">k 个独立标准正态变量平方之和。右偏、非负；自由度越大越对称、越靠右。比较多个率/构成比、拟合优度都基于它。</div>
+    <div class="grid2">
+      <div>
+        <div class="svgbox" id="svg-chi2"></div>
+        <div class="legend"><span><b style="background:#17699b"></b>概率密度</span><span><b style="background:#94354f"></b>右侧拒绝域</span></div>
+      </div>
+      <div>
+        <div class="panel">
+          <h3>参数与检验水准</h3>
+          <div class="ctl"><label>自由度 ν</label><input type="range" id="c-df" min="1" max="30" step="1" value="1"><span class="val" id="c-df-v">1</span></div>
+          <div class="ctl"><label>α（拖动）</label><input type="range" id="alpha-c-s" min="0.005" max="0.20" step="0.005" value="0.05"><span class="val" id="alpha-c-v">0.05</span></div>
+          <div class="ctl"><label>（快捷）</label><select id="alpha-c"><option>0.10</option><option selected>0.05</option><option>0.01</option></select></div>
+        </div>
+        <div class="panel" style="margin-top:12px">
+          <h3>χ² 界值表（右侧尾部）</h3>
+          <table class="crit" id="crit-c"></table>
+          <div class="note">χ² 检验只看右侧（差异越大 χ² 越大），故均为单侧界值。ν=1 时 α=0.05 的界值 3.84 就是四格表检验的常用门槛。</div>
+        </div>
+        <div class="stat-input">
+          检验统计量 χ² =
+          <input type="number" id="c-stat" step="0.01" value="3.84">
+          <button class="btn" onclick="judgeChi()">判定是否落入拒绝域</button>
+        </div>
+        <div id="v-c"></div>
+      </div>
+    </div>
+    <div class="socratic"><div class="s-title">继续想一想</div>
+      <details><summary>追问 1：χ² 为什么恒非负、且只有右侧拒绝域？</summary>
+        <p>它是若干平方项之和：(O−T)²/T 的合计。平方消去了「方向」，只留下「偏离程度」；偏离越大 χ² 越大，因此大值才可疑，拒绝域只在右尾。</p></details>
+      <details><summary>追问 2：四格表 ν=1，行×列表 ν=(R−1)(C−1)——自由度的「1」代表什么？</summary>
+        <p>代表在边际合计固定时能自由填入的格子数。四格表一旦填满 1 个格子，其余由边际合计唯一决定，故只有 1 个自由信息。</p></details>
+      <details><summary>追问 3：n≥40 且所有 T≥5 用 Pearson χ²；1≤T&lt;5 怎么办？T&lt;1 呢？</summary>
+        <p>用校正 χ²（连续性校正）或改用 Fisher 确切概率法；T&lt;1 只能用确切概率法。理论频数过小意味着正态近似失效。</p></details>
+    </div>
+  </section>
+
+  <!-- ========== F ========== -->
+  <section id="t-F" class="card" hidden>
+    <h2>F 分布</h2>
+    <div class="sub">两个独立 χ² 变量各除以自身自由度之比。方差分析（组间/组内均方之比）、两方差齐性检验、回归方程整体检验都用它。</div>
+    <div class="grid2">
+      <div>
+        <div class="svgbox" id="svg-F"></div>
+        <div class="legend"><span><b style="background:#17699b"></b>当前 F(ν₁,ν₂)</span><span><b style="background:#b9d1e3"></b>仅 ν₁ 改变</span><span><b style="background:#cbbfe4"></b>仅 ν₂ 改变</span><span><b style="background:#94354f"></b>拒绝域</span></div>
+        <div class="svgbox" id="svg-f-sweep1" style="margin-top:10px"></div>
+        <div class="svgbox" id="svg-f-sweep2" style="margin-top:8px"></div>
+      </div>
+      <div>
+        <div class="panel">
+          <h3>参数与检验水准</h3>
+          <div class="ctl"><label>分子自由度 ν₁</label><input type="range" id="f-df1" min="1" max="30" step="1" value="3"><span class="val" id="f-df1-v">3</span></div>
+          <div class="ctl"><label>分母自由度 ν₂</label><input type="range" id="f-df2" min="2" max="120" step="1" value="20"><span class="val" id="f-df2-v">20</span></div>
+          <div class="ctl"><label>α（拖动）</label><input type="range" id="alpha-f-s" min="0.005" max="0.20" step="0.005" value="0.05"><span class="val" id="alpha-f-v">0.05</span></div>
+          <div class="ctl"><label>（快捷）</label><select id="alpha-f"><option>0.10</option><option selected>0.05</option><option>0.01</option></select></div>
+        </div>
+        <div class="panel" style="margin-top:12px">
+          <h3>F 界值表（α = 0.05，右侧）</h3>
+          <table class="crit" id="crit-f"></table>
+          <div class="note">F 界值表是「二维」的：由 ν₁ 定列、ν₂ 定行。行、列同时高亮 = 当前 (ν₁, ν₂) 位置。</div>
+        </div>
+        <div class="panel" style="margin-top:12px" id="f-shape"></div>
+        <div class="stat-input">
+          检验统计量 F =
+          <input type="number" id="f-stat" step="0.01" value="3.10">
+          <button class="btn" onclick="judgeF()">判定是否落入拒绝域</button>
+        </div>
+        <div id="v-f"></div>
+      </div>
+    </div>
+    <div class="socratic"><div class="s-title">继续想一想</div>
+      <details><summary>追问 1：方差分析的逻辑为什么是「比较两个方差」？</summary>
+        <p>若 H₀（各组均数相等）为真，组间变异与组内变异都只是随机误差的估计，F≈1；若处理真有效，组间会额外多出「处理效应」，F 明显大于 1。F 分布给出了「纯随机情况下 F 能大到多少」的标尺。</p></details>
+      <details><summary>追问 2：F 检验有统计学意义只说明「至少两组不同」——接下来做什么？为什么不能两两做 t 检验？</summary>
+        <p>需事后多重比较（SNK-q、Dunnett-t、Bonferroni 等）。两两做 t 检验会把犯 I 类错误的概率随比较次数迅速膨胀（m 次比较至少 1−0.95<sup>m</sup>）。</p></details>
+      <details><summary>追问 3：你学过的多元线性回归里，F 检验和 t 检验各回答什么问题？</summary>
+        <p>F 检验回答「整个方程是否有意义」（所有 β 是否同时为 0）；各系数的 t 检验回答「单个变量在控制其他变量后是否有贡献」。注意：F 检验有统计学意义不代表每个变量的 t 检验都有统计学意义，反之亦然（多重共线性时尤甚）。</p></details>
+    </div>
+  </section>
+
+  <!-- ========== 二项 ========== -->
+  <section id="t-binom" class="card" hidden>
+    <h2>二项分布 B(n, π)</h2>
+    <div class="sub">n 次独立 Bernoulli 试验中「成功」次数的分布。率（治愈、有效、阳性）的抽样基础；n 大且 π 不接近 0/1 时近似正态——这解释了率的标准误与 u 检验。</div>
+    <div class="grid2">
+      <div>
+        <div class="svgbox" id="svg-binom"></div>
+        <div class="legend"><span><b style="background:#17699b"></b>P(X = k)</span><span><b style="background:#94354f"></b>拒绝域（P ≤ α/2 的两侧尾部）</span><span><b style="background:#1e7a4f"></b>正态近似曲线（虚线）</span></div>
+      </div>
+      <div>
+        <div class="panel">
+          <h3>参数与检验水准</h3>
+          <div class="ctl"><label>n（试验次数）</label><input type="range" id="b-n" min="2" max="60" step="1" value="20"><span class="val" id="b-n-v">20</span></div>
+          <div class="ctl"><label>π（成功概率）</label><input type="range" id="b-p" min="0.05" max="0.95" step="0.05" value="0.5"><span class="val" id="b-p-v">0.50</span></div>
+          <div class="ctl"><label>α（拖动）</label><input type="range" id="alpha-b-s" min="0.005" max="0.20" step="0.005" value="0.05"><span class="val" id="alpha-b-v">0.05</span></div>
+          <div class="ctl"><label>（快捷）</label><select id="alpha-b"><option>0.10</option><option selected>0.05</option><option>0.01</option></select></div>
+        </div>
+        <div class="panel" style="margin-top:12px">
+          <h3>精确概率计算（当前 n、π）</h3>
+          <div class="stat-input">
+            X = <input type="number" id="b-k" step="1" min="0" value="15" style="width:70px">
+            <button class="btn" onclick="calcBinom()">计算</button>
+          </div>
+          <div id="b-prob" class="note" style="font-size:15px;margin-top:8px"></div>
+          <div class="note">当 np(1−p) ≥ 5 时，可用正态近似：<span class="kbd">u = (p̂−π)/√(π(1−π)/n)</span>，这正是率的 z 检验的理论来源。</div>
+        </div>
+      </div>
+    </div>
+    <div class="socratic"><div class="s-title">继续想一想</div>
+      <details><summary>追问 1：为什么小样本率的比较要用 Fisher 确切概率法而不是 χ²？</summary>
+        <p>χ² 用连续分布近似离散的二项分布，n 小或 T 小时近似失真；确切概率法直接在「边际合计固定」的所有四格表上按超几何分布精确求和，不依赖近似。</p></details>
+      <details><summary>追问 2：π 从 0.5 拖到 0.1，图形发生了什么？对「正态近似」有何启示？</summary>
+        <p>分布由对称变为右偏。近似条件不是只看 n，而是 np 与 n(1−p) 都要够大——π 越偏离 0.5，所需 n 越大，这正是率接近 0 或 1 时要慎用近似法的图形解释。</p></details>
+      <details><summary>追问 3：二项分布的均数 np、方差 np(1−p)，和「率的标准误」是什么关系？</summary>
+        <p>对次数 X：μ=np, σ²=np(1−p)；换算到率 p̂=X/n：μ=p, σ²=p(1−p)/n，标准误即 √(p(1−p)/n)。样本量 n 在分母上——样本越大，率的抽样误差越小。</p></details>
+    </div>
+  </section>
+
+  <!-- ========== 泊松 ========== -->
+  <section id="t-pois" class="card" hidden>
+    <h2>泊松分布 P(λ)</h2>
+    <div class="sub">单位时间/空间内稀有事件发生次数：细菌计数、放射脉冲、罕见病发病数。均数=方差=λ；λ≥20 时可用正态近似，λ 大且 n 大时趋于二项分布。</div>
+    <div class="grid2">
+      <div>
+        <div class="svgbox" id="svg-pois"></div>
+        <div class="legend"><span><b style="background:#17699b"></b>P(X = k)</span><span><b style="background:#94354f"></b>拒绝域</span><span><b style="background:#1e7a4f"></b>正态近似曲线（虚线）</span></div>
+      </div>
+      <div>
+        <div class="panel">
+          <h3>参数与检验水准</h3>
+          <div class="ctl"><label>λ（单位均数）</label><input type="range" id="p-lam" min="0.5" max="40" step="0.5" value="4"><span class="val" id="p-lam-v">4.0</span></div>
+          <div class="ctl"><label>α（拖动）</label><input type="range" id="alpha-p-s" min="0.005" max="0.20" step="0.005" value="0.05"><span class="val" id="alpha-p-v">0.05</span></div>
+          <div class="ctl"><label>（快捷）</label><select id="alpha-p"><option>0.10</option><option selected>0.05</option><option>0.01</option></select></div>
+        </div>
+        <div class="panel" style="margin-top:12px">
+          <h3>精确概率计算</h3>
+          <div class="stat-input">
+            X = <input type="number" id="p-k" step="1" min="0" value="8" style="width:70px">
+            <button class="btn" onclick="calcPois()">计算</button>
+          </div>
+          <div id="p-prob" class="note" style="font-size:15px;margin-top:8px"></div>
+          <div class="note">均数 = 方差 = λ 是泊松分布的标志；样本计数 X 是 λ 的估计，其标准误近似 √X。<b>「方差随均数增大」</b>是计数资料区别于正态资料的典型特征——这提示了后面学 Poisson 回归的必要性。</div>
+        </div>
+      </div>
+    </div>
+    <div class="socratic"><div class="s-title">继续想一想</div>
+      <details><summary>追问 1：二项分布 n→∞、π→0 且 nπ 固定时趋于泊松分布——这句话在医学上怎么用？</summary>
+        <p>「大量观察对象中罕见事件」：n 是人口、π 是罕见发病率、nπ=λ 是期望发病数。于是罕见病的发病数可用 λ 已知的泊松分布建模，与既往水平比较。</p></details>
+      <details><summary>追问 2：某病年发病 X=8 例，既往年均 4 例，能说「发病上升」吗？</summary>
+        <p>不能只看倍数。P(X≥8|λ=4)≈0.051，尚不足以在 α=0.05 下拒绝「仍为 4 例」的假设。直观感受右尾阴影面积即可判断。</p></details>
+      <details><summary>追问 3：泊松回归和 logistic 回归都处理「计数/率」，区别在哪里？</summary>
+        <p>logistic 回归处理「二分类比例」（分母固定人数）；Poisson 回归处理「事件计数与发生速率」，并允许暴露量（人年）不同，常配合对数链接与偏移量，是队列发病率分析的标准工具。</p></details>
+    </div>
+  </section>
+
+  <!-- ========== 多元正态 ========== -->
+  <section id="t-mvn" class="card" hidden>
+    <h2>多元（二元）正态分布</h2>
+    <div class="sub">多元正态分布 N(μ, Σ) 是多元线性回归、多元统计分析（判别、聚类、主成分）的分布基础。右侧展示二元情形：等高线椭圆的形状由相关系数 ρ 决定。</div>
+    <div class="grid2">
+      <div>
+        <div class="svgbox" id="svg-mvn"></div>
+        <div class="note" style="margin-top:6px">上：三维密度曲面（线框越高越靠近峰值，底面椭圆为等高线投影）</div>
+        <div class="svgbox" id="svg-mvn2" style="margin-top:10px"></div>
+        <div class="legend"><span><b style="background:#17699b"></b>等高线（越内层密度越高）</span><span><b style="background:#94354f"></b>切片 x₁=当前值 与条件分布</span><span><b style="background:#6b55a2"></b>条件均数连线</span></div>
+      </div>
+      <div>
+        <div class="panel">
+          <h3>参数</h3>
+          <div class="ctl"><label>相关系数 ρ</label><input type="range" id="m-rho" min="-0.95" max="0.95" step="0.05" value="0.6"><span class="val" id="m-rho-v">0.60</span></div>
+          <div class="ctl"><label>切片的 x₁ 位置</label><input type="range" id="m-x1" min="-2.5" max="2.5" step="0.1" value="1.5"><span class="val" id="m-x1-v">1.5</span></div>
+          <div class="ctl"><label>σ₁（x₁ 离散度）</label><input type="range" id="m-s1" min="0.5" max="1.8" step="0.1" value="1"><span class="val" id="m-s1-v">1.0</span></div>
+          <div class="ctl"><label>σ₂（x₂ 离散度）</label><input type="range" id="m-s2" min="0.5" max="1.8" step="0.1" value="1"><span class="val" id="m-s2-v">1.0</span></div>
+        </div>
+        <div class="panel" style="margin-top:12px">
+          <h3>关键公式</h3>
+          <div class="formula">f(x₁,x₂) = 1/(2π√|Σ|) · exp(−½ (x−μ)ᵀ Σ⁻¹ (x−μ))</div>
+          <div class="formula">Σ = [ 1  ρ ; ρ  1 ]，|Σ| = 1−ρ²</div>
+          <div class="note">条件分布仍是正态：<span class="kbd">E[X₂|x₁] = ρ·(x₁/σ₁)·σ₂</span>，<span class="kbd">SD = σ₂√(1−ρ²)</span>。这正是<b>回归</b>思想的分布学根源：知道 x₁ 能缩小 x₂ 的不确定性。</div>
+        </div>
+        <div class="panel" style="margin-top:12px" id="m-shape"></div>
+      </div>
+    </div>
+    <div class="socratic"><div class="s-title">继续想一想</div>
+      <details><summary>追问 1：ρ=0 时椭圆变圆——「不相关」等于「独立」吗？</summary>
+        <p>对<b>多元正态</b>分布，ρ=0 等价于独立（特例！）；对一般分布，不相关≠独立。这就是为什么多元正态假定在多元统计中如此便利。</p></details>
+      <details><summary>追问 2：边缘分布是正态，联合分布一定是多元正态吗？</summary>
+        <p>不一定！经典反例可以构造出边缘正态但联合非正态的分布。多元正态的判定要用联合密度/特征函数，而不是逐个看边缘。</p></details>
+      <details><summary>追问 3：多元线性回归对误差的正态性假定，检验「误差」为什么比检验「Y 本身」更合理？</summary>
+        <p>回归要求的是给定 X 后 Y 的条件分布（即残差）正态；Y 的边缘分布混合了 X 带来的系统性变异，即使残差正态，Y 的边缘也可以偏态。</p></details>
+    </div>
+  </section>
+
+  <!-- ========== logit ========== -->
+  <section id="t-logit" class="card" hidden>
+    <h2>logit 变换与 logistic 分布</h2>
+    <div class="sub">概率 p ∈ (0,1) 经 logit 变换 logit(p)=ln(p/(1−p)) 映射到 (−∞,+∞)——这就是 logistic 回归「线性」的由来。S 形曲线即 logistic 函数 p = 1/(1+e<sup>−η</sup>)。</div>
+    <div class="grid2">
+      <div>
+        <div class="svgbox" id="svg-logit"></div>
+        <div class="legend"><span><b style="background:#17699b"></b>logistic 曲线 p(η)</span><span><b style="background:#94354f"></b>当前 η 对应的点</span><span><b style="background:#c5d3df"></b>参考线 p=0.5</span></div>
+      </div>
+      <div>
+        <div class="panel">
+          <h3>交互：在对数 odds 尺与概率尺之间来回</h3>
+          <div class="ctl"><label>η = logit(p)</label><input type="range" id="l-eta" min="-5" max="5" step="0.1" value="0"><span class="val" id="l-eta-v">0.0</span></div>
+          <div class="stat-input" style="margin-top:6px">
+            <span>概率 p = <b id="l-p">0.500</b></span>
+            <span>odds = p/(1−p) = <b id="l-odds">1.000</b></span>
+          </div>
+          <div class="note">观察：p 接近 0 或 1 时，η 需要「跑得越来越快」——概率尺两端被压缩，这正是 logit 变换存在的意义：给 p 一个可以线性建模的无穷空间。</div>
+        </div>
+        <div class="panel" style="margin-top:12px">
+          <h3>OR 的解读（连接你的 logistic 回归知识）</h3>
+          <div class="ctl"><label>暴露组 η₁</label><input type="range" id="l-e1" min="-4" max="4" step="0.1" value="0.7"><span class="val" id="l-e1-v">0.70</span></div>
+          <div class="ctl"><label>非暴露组 η₀</label><input type="range" id="l-e0" min="-4" max="4" step="0.1" value="-0.4"><span class="val" id="l-e0-v">-0.40</span></div>
+          <div id="l-or" class="note" style="font-size:15px"></div>
+        </div>
+      </div>
+    </div>
+    <div class="socratic"><div class="s-title">继续想一想</div>
+      <details><summary>追问 1：为什么不直接对 p 建线性模型 p = β₀+β₁x？</summary>
+        <p>线性模型的预测值会越出 (0,1)；且 p 接近 0/1 时效应必然「饱和」，线性关系失真。logit 把 (0,1) 拉伸到整条实数轴，既保证预测合法，又让协变量效应在 odds 尺上恒定可乘。</p></details>
+      <details><summary>追问 2：β 每增加 1，p 增加多少？「OR=exp(β)」中 RR、OR、HR 的适用场景如何区分？</summary>
+        <p>logit 尺上每 +1 = odds ×e ≈ 2.72 倍，但 p 的增量随基线 p 而变化——看 S 曲线上移动同一段水平距离，中段陡、两端平。RR 适合队列（可直接算率）；OR 适合病例对照（无法算率）与 logistic 回归；HR 适合生存资料（瞬时风险）。</p></details>
+      <details><summary>追问 3：logistic 回归为什么用「最大似然」而不是最小二乘估计？</summary>
+        <p>结局是二分类，误差非正态、方差随 p 变化，最小二乘的 optimality 前提不成立；似然函数直接刻画「在 β 下观测到这组 0/1 结果的概率」，MLE 在大样本下有良好的统计性质。</p></details>
+    </div>
+  </section>
+
+  <!-- ========== 原理 ========== -->
+  <section id="t-princ" class="card" hidden>
+    <h2>假设检验的基本原理：一张图看懂</h2>
+    <div class="sub">核心逻辑是<b>小概率反证法</b>：先假定 H₀ 成立，看当前样本（统计量）在 H₀ 分布下出现的概率有多大；若小到不超过 α，则拒绝 H₀。所有检验的差异只在「用什么分布」。</div>
+    <div class="grid2">
+      <div>
+        <div class="svgbox" id="svg-princ"></div>
+        <div class="legend"><span><b style="background:#17699b"></b>H₀ 成立时检验统计量的分布</span><span><b style="background:#94354f"></b>拒绝域（面积=α）</span><span><b style="background:#9FC6E8"></b>当前统计量的 P 值（马卡龙浅蓝面积）</span></div>
+      </div>
+      <div>
+        <div class="panel">
+          <h3>自由实验台</h3>
+          <div class="ctl"><label>选分布</label><select id="pr-dist">
+            <option value="z" selected>z（标准正态）</option><option value="t">t（ν=10）</option>
+            <option value="chi2">χ²（ν=1）</option><option value="F">F(3,20)</option></select></div>
+          <div class="ctl"><label>检验方式</label><select id="pr-tail"><option value="2" selected>双侧</option><option value="1">单侧（右侧）</option></select></div>
+          <div class="ctl"><label>统计量取值</label><input type="range" id="pr-stat" min="-4" max="4" step="0.05" value="2.0"><span class="val" id="pr-stat-v">2.00</span></div>
+          <div class="ctl"><label>α（拖动）</label><input type="range" id="pr-alpha-s" min="0.005" max="0.20" step="0.005" value="0.05"><span class="val" id="pr-alpha-v">0.05</span></div>
+          <div id="pr-verdict" class="verdict ns">拖动滑块：观察紫色 P 值面积与红色 α 拒绝域面积的比赛。</div>
+        </div>
+        <div class="panel" style="margin-top:12px">
+          <h3>两种错误的地图</h3>
+          <table class="crit" style="font-size:14px">
+            <tr><th></th><th>拒绝 H₀</th><th>不拒绝 H₀</th></tr>
+            <tr><td><b>H₀ 真</b></td><td style="color:var(--wrong)">Ⅰ类错误（α）</td><td>正确（1−α）</td></tr>
+            <tr><td><b>H₀ 假</b></td><td>正确（检验效能 1−β）</td><td style="color:var(--wrong)">Ⅱ类错误（β）</td></tr>
+          </table>
+          <div class="note">α 是研究者事先「买下的」犯错额度：界值就是按 α 从分布表里查出来的分界线。α 越小界值越大 → 拒绝越难 → β 越大（效能越低）。样本量是同时压低两者的唯一办法。</div>
+        </div>
+      </div>
+    </div>
+    <!-- ===== α 与 β 的关系 ===== -->
+    <div style="margin-top:26px;padding-top:20px;border-top:2px solid var(--pale)">
+      <h2 style="font-size:19px">α 与 β 的关系：为什么必须画两条分布曲线？</h2>
+      <div class="sub"><b>下图有两条分布曲线</b>：左侧<b>深蓝实线</b>是 <b>H₀ 为真</b>时统计量的分布，右侧<b>蓝色虚线</b>是 <b>H₁ 为真</b>（真实效应存在）时的分布——正因为 β 是「H₁ 为真却不拒绝」的概率，它只能画在 H₁ 的分布下，一张图必须同时画两条曲线才能同时展示 α 与 β。<b style="color:#94354f">深红面积 = α</b>（在 H₀ 曲线下），<b style="color:#1F8A5B">浅绿面积 = β</b>（在 H₁ 曲线下），<b style="color:#1e7a4f">1−β（效能）不填色</b>，只用文字标注。</div>
+      <div class="grid2">
+        <div>
+          <div class="svgbox" id="svg-ab"></div>
+          <div class="legend">
+            <span><b style="background:#17699b"></b>H₀ 分布</span>
+            <span><b style="background:#3E7FB8"></b>H₁ 分布（蓝色虚线，真实效应）</span>
+            <span><b style="background:#94354f"></b>α：Ⅰ类错误（H₀ 下）</span>
+            <span><b style="background:#8FDDB4;border:1.5px solid #1F8A5B"></b>β：Ⅱ类错误（H₁ 下，浅绿面积）</span>
+            <span><b style="background:transparent;border:1.5px dashed #1e7a4f"></b>1−β：效能（仅标注，不填色）</span>
+          </div>
+          <div class="note" style="margin-top:8px">深红虚线 = 界值（按 H₀ 定出的判据）。界值 <b>右</b>侧：H₀ 曲线（深蓝实线）下的红色面积是 α，H₁ 曲线（蓝色虚线）下的这部分是效能 1−β（不填色）；界值 <b>左</b>侧：H₁ 曲线下的浅绿面积就是 β。</div>
+        </div>
+        <div>
+          <div class="panel">
+            <h3>实验：谁在推动 α 与 β</h3>
+            <div class="ctl"><label>α（拖动）</label><input type="range" id="ab-alpha" min="0.005" max="0.20" step="0.005" value="0.05"><span class="val" id="ab-alpha-v">0.050</span></div>
+            <div class="ctl"><label>效应量 δ（μ₁−μ₀）/σ</label><input type="range" id="ab-delta" min="0" max="2.5" step="0.05" value="0.6"><span class="val" id="ab-delta-v">0.60</span></div>
+            <div class="ctl"><label>样本量 n</label><input type="range" id="ab-n" min="2" max="100" step="1" value="16"><span class="val" id="ab-n-v">16</span></div>
+            <div class="ctl"><label>检验方式</label><select id="ab-tail"><option value="2">双侧（μ ≠ μ₀）</option><option value="1" selected>单侧（μ &gt; μ₀）</option></select></div>
+          </div>
+          <div class="panel" style="margin-top:12px" id="ab-result"></div>
+          <div class="panel" style="margin-top:12px">
+            <h3>结论速查</h3>
+            <div class="note" style="line-height:1.9">
+              • <b>α ↓</b>（界值右移）→ α 变小，但 β <b>变大</b>、效能下降——这是唯一能靠「改判据」换来的交换关系<br>
+              • <b>增加效应量 δ</b>（真实差异更大）→ 两条曲线拉开 → β 变小、效能升高<br>
+              • <b>增加样本量 n</b> → 标准误变小、两条曲线都变窄 → α 不变而 β <b>变小</b>，唯一能同时改善两者的手段<br>
+              • 公式关系：<span class="kbd">Z_β ≈ Z_{1−α} − δ√n</span>（单侧；双侧用 Z_{1−α/2}）
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="socratic" style="margin-top:14px"><div class="s-title">继续想一想</div>
+        <details><summary>追问 1：为什么不能把 α 设成 0.000001，这样就不会犯 Ⅰ 类错误了？</summary>
+          <p>看左边图：α 缩到极小的同时拒绝域几乎消失，H₁ 曲线落在拒绝域内的部分（效能）也趋近于 0——你将永远无法发现真实存在的差异。α 与 β 是<b>同一把尺子切两半</b>，此消彼长。</p></details>
+        <details><summary>追问 2：样本量为什么能「两全其美」？</summary>
+          <p>因为 n 只改变曲线的<b>宽度</b>（标准误 σ/√n），不改变「界值按 α 定」这条规则。曲线变窄后，界值位置基本不变，但 H₁ 曲线整体更集中地越过界值——α 未变、β 却下降了。</p></details>
+        <details><summary>追问 3：一项研究 P=0.08（无统计学意义），你能据此说「干预无效」吗？</summary>
+          <p>不能。它可能是 β 较大（样本量小、效应量小）。该结论的正确表述是「未发现统计学证据」，并应报告效应量与可信区间。这也解释了为什么「无统计学意义」的阴性结果需要用效能分析来解释。</p></details>
+        <details><summary>追问 4：α、β、n、δ 四者的关系，对课题设计意味着什么？</summary>
+          <p>这是一个只有三个已知才能求第四个的方程：设计阶段先定 α（通常 0.05）、定效能（通常 0.80 或 0.90）、再依据预试验或文献估计 δ，即可反算出<b>所需最小样本量</b>。这就是「样本量估计」的全部逻辑来源。</p></details>
+      </div>
+    </div>
+
+    <div class="socratic"><div class="s-title">继续想一想</div>
+      <details><summary>追问 1：P 值和 α 到底谁先出现？「P&lt;0.05 所以有统计学意义」的说法哪里不严谨？</summary>
+        <p>α 先于数据确定（设计阶段），P 值后于数据计算。严谨表述是「在 α=0.05 水准上拒绝 H₀」；P&lt;0.05 不代表「H₀ 成立的概率&lt;5%」，也不代表效应大小。</p></details>
+      <details><summary>追问 2：不拒绝 H₀ 能说「两总体相同」吗？</summary>
+        <p>不能。不拒绝只是「证据不足以推翻」，与「证明成立」是两回事；它还可能是效能不足（n 太小、β 大）。报告时应同时给出效应量与可信区间。</p></details>
+      <details><summary>追问 3：本页 8 个分布对应你学过的哪些检验？自己列一张「检验 ↔ 分布 ↔ 条件」的对照表。</summary>
+        <p>z：大样本均数/率的比较；t：小样本均数、配对、回归系数；χ²：率/构成比、拟合优度；F：方差分析、回归整体检验；二项/泊松：率的精确与近似推断；logit：logistic 回归。条条大路通向同一原理：在 H₀ 分布上找「现在这么极端」有多罕见。</p></details>
+    </div>
+  </section>
+</main>
+
+<div class="footer"><span>统计分布互动课堂 · 建议配合教材界值表对照使用 · 所有计算在浏览器本地完成</span><div class="dept-sign footer-sign">中南大学 湘雅公共卫生学院 流行病与卫生统计学系</div></div>
+
+<style>.btn{background:var(--blue);color:#fff;border:1px solid var(--blue);border-radius:7px;font-size:14px;padding:7px 14px}.btn:hover{background:var(--deep)}</style>
+<noscript>请在启用 JavaScript 的浏览器中打开本页。</noscript>
+<script>
+/* ===================== 数学库 ===================== */
+const PI=Math.PI;
+function lnGamma(x){
+  const g=[76.18009172947146,-86.50532032941677,24.01409824083091,-1.231739572450155,0.1208650973866179e-2,-0.5395239384953e-5];
+  let xx=x, y=x, tmp=x+5.5; tmp-=(xx+0.5)*Math.log(tmp);
+  let ser=1.000000000190015;
+  for(let j=0;j<6;j++) ser+=g[j]/++y;
+  return -tmp+Math.log(2.5066282746310005*ser/x);
+}
+function betacf(a,b,x){
+  const MAXIT=200,EPS=3e-12,FPMIN=1e-300;
+  let qab=a+b,qap=a+1,qam=a-1,c=1,d=1-qab*x/qap;
+  if(Math.abs(d)<FPMIN)d=FPMIN; d=1/d; let h=d;
+  for(let m=1;m<=MAXIT;m++){
+    const m2=2*m; let aa=m*(b-m)*x/((qam+m2)*(a+m2));
+    d=1+aa*d; if(Math.abs(d)<FPMIN)d=FPMIN;
+    c=1+aa/c; if(Math.abs(c)<FPMIN)c=FPMIN;
+    d=1/d; h*=d*c;
+    aa=-(a+m)*(qab+m)*x/((a+m2)*(qap+m2));
+    d=1+aa*d; if(Math.abs(d)<FPMIN)d=FPMIN;
+    c=1+aa/c; if(Math.abs(c)<FPMIN)c=FPMIN;
+    d=1/d; const del=d*c; h*=del;
+    if(Math.abs(del-1)<EPS)break;
+  }
+  return h;
+}
+function betai(a,b,x){ // 正则化不完全贝塔 I_x(a,b)
+  if(x<=0)return 0; if(x>=1)return 1;
+  const bt=Math.exp(lnGamma(a+b)-lnGamma(a)-lnGamma(b)+a*Math.log(x)+b*Math.log(1-x));
+  return x<(a+1)/(a+b+2) ? bt*betacf(a,b,x)/a : 1-bt*betacf(b,a,1-x)/b;
+}
+function gser(a,x){ let ap=a,sum=1/a,del=sum,n=0;
+  for(n=1;n<300;n++){ ap++; del*=x/ap; sum+=del; if(Math.abs(del)<Math.abs(sum)*1e-14)break; }
+  return sum*Math.exp(-x+a*Math.log(x)-lnGamma(a));
+}
+function gcf(a,x){ const FPMIN=1e-300; let b=x+1-a,c=1/FPMIN,d=1/b,h=d;
+  for(let i=1;i<300;i++){ const an=-i*(i-a); b+=2; d=an*d+b; if(Math.abs(d)<FPMIN)d=FPMIN;
+    c=b+an/c; if(Math.abs(c)<FPMIN)c=FPMIN; d=1/d; const del=d*c; h*=del;
+    if(Math.abs(del-1)<1e-14)break; }
+  return Math.exp(-x+a*Math.log(x)-lnGamma(a))*h;
+}
+function gammainc(a,x){ // 正则化下不完全伽马 P(a,x)
+  if(x<0||a<=0)return NaN;
+  if(x===0)return 0;
+  return x<a+1 ? gser(a,x) : 1-gcf(a,x);
+}
+// 标准正态
+function phi(z){ return 0.5*(1+erf(z/Math.SQRT2)); }
+function erf(x){ const s=x<0?-1:1;x=Math.abs(x);
+  const a1=0.254829592,a2=-0.284496736,a3=1.421413741,a4=-1.453152027,a5=1.061405429,p=0.3275911;
+  const t=1/(1+p*x),y=1-(((((a5*t+a4)*t)+a3)*t+a2)*t+a1)*t*Math.exp(-x*x); return s*y; }
+function erfinv(y){ // Acklam 简化
+  const a=0.147, ln=Math.log(1-y*y);
+  const t1=2/(PI*a)+ln/2;
+  return Math.sign(y)*Math.sqrt(Math.sqrt(t1*t1-ln/a)-2/(PI*a));
+}
+function zQuant(p){ return quantile(phi,p,-10,10); }
+// t 分布 CDF
+function tCDF(t,df){ const x=df/(df+t*t); const p=0.5*betai(df/2,0.5,x);
+  return t>0?1-p:p; }
+function tPdf(t,df){ return Math.exp(lnGamma((df+1)/2)-lnGamma(df/2))/Math.sqrt(df*PI)*Math.pow(1+t*t/df,-(df+1)/2); }
+// chi2
+function chi2CDF(x,df){ return x<=0?0:gammainc(df/2,x/2); }
+function chi2Pdf(x,df){ if(x<=0)return 0; return Math.exp((df/2-1)*Math.log(x)-x/2-lnGamma(df/2)-df/2*Math.log(2)); }
+// F
+function fCDF(x,d1,d2){ return x<=0?0:1-betai(d2/2,d1/2,d2/(d2+d1*x)); }
+function fPdf(x,d1,d2){ if(x<=0)return 0;
+  return Math.exp((d1/2)*Math.log(d1/d2)+(d1/2-1)*Math.log(x)-((d1+d2)/2)*Math.log(1+d1*x/d2)-lnGamma(d1/2)-lnGamma(d2/2)+lnGamma((d1+d2)/2)); }
+// 通用分位数（二分法）
+function quantile(cdf,target,lo,hi){ 
+  for(let i=0;i<200;i++){ const mid=(lo+hi)/2; if(cdf(mid)<target)lo=mid;else hi=mid; }
+  return (lo+hi)/2;
+}
+// 二项 / 泊松
+function binomPmf(k,n,p){ if(k<0||k>n)return 0;
+  return Math.exp(lnGamma(n+1)-lnGamma(k+1)-lnGamma(n-k+1)+k*Math.log(p)+(n-k)*Math.log(1-p)); }
+function poisPmf(k,lam){ return Math.exp(-lam+k*Math.log(lam)-lnGamma(k+1)); }
+function poisCDF(k,lam){ let s=0; for(let i=0;i<=k;i++)s+=poisPmf(i,lam); return Math.min(1,s); }
+
+/* ===================== SVG 绘图工具 ===================== */
+function chartSVG(w,h,pad,xr,yr){ // 返回坐标映射
+  return {
+    w,h,pad,xr,yr,
+    X:x=>pad.l+(w-pad.l-pad.r)*(x-xr[0])/(xr[1]-xr[0]),
+    Y:y=>h-pad.b-(h-pad.t-pad.b)*(y-yr[0])/(yr[1]-yr[0])
+  };
+}
+function axes(c,xticks,yticks,fx,fy,xlab,ylab){
+  let s='';
+  for(let i=0;i<=xticks;i++){const x=c.xr[0]+(c.xr[1]-c.xr[0])*i/xticks;
+    s+='<line x1="'+c.X(x)+'" y1="'+c.Y(c.yr[0])+'" x2="'+c.X(x)+'" y2="'+c.Y(c.yr[1])+'" stroke="#e3edf5"/>';
+    s+='<text x="'+c.X(x)+'" y="'+(c.h-c.pad.b+16)+'" text-anchor="middle" font-size="11" fill="#455d72">'+fy(x)+'</text>';}
+  for(let i=0;i<=yticks;i++){const y=c.yr[0]+(c.yr[1]-c.yr[0])*i/yticks;
+    s+='<line x1="'+c.X(c.xr[0])+'" y1="'+c.Y(y)+'" x2="'+c.X(c.xr[1])+'" y2="'+c.Y(y)+'" stroke="#e3edf5"/>';
+    s+='<text x="'+(c.pad.l-8)+'" y="'+(c.Y(y)+4)+'" text-anchor="end" font-size="11" fill="#455d72">'+fx(y)+'</text>';}
+  s+='<text x="'+(c.w/2)+'" y="'+(c.h-6)+'" text-anchor="middle" font-size="12" fill="#455d72">'+xlab+'</text>';
+  s+='<text x="13" y="'+((c.h)/2)+'" font-size="12" fill="#455d72" transform="rotate(-90 13 '+(c.h/2)+')" text-anchor="middle">'+ylab+'</text>';
+  return s;
+}
+function areaPath(c,f,x0,x1,N){
+  let p='M '+c.X(x0)+' '+c.Y(c.yr[0]);
+  for(let i=0;i<=N;i++){const x=x0+(x1-x0)*i/N; p+=' L '+c.X(x).toFixed(2)+' '+c.Y(f(x)).toFixed(2);}
+  p+=' L '+c.X(x1)+' '+c.Y(c.yr[0])+' Z';
+  return p;
+}
+function curvePath(c,f,x0,x1,N){
+  let p='';
+  for(let i=0;i<=N;i++){const x=x0+(x1-x0)*i/N; p+=(i?' L ':'M ')+c.X(x).toFixed(2)+' '+c.Y(f(x)).toFixed(2);}
+  return p;
+}
+function wrap(id,inner,w,h){ document.getElementById(id).innerHTML='<svg viewBox="0 0 '+w+' '+h+'" style="width:100%;height:auto">'+inner+'</svg>'; }
+/* ===== 固定视窗绘图内核：视窗独立于分布参数，参数变化只改曲线 ===== */
+function mkc(w,h,pad,xr,yr){
+  const c=chartSVG(w,h,pad,xr,yr);
+  c.ax=function(xt,yt,fx,fy,xlab,ylab,opt){
+    opt=opt||{};
+    let s='';
+    for(let i=0;i<=xt;i++){
+      const x=xr[0]+(xr[1]-xr[0])*i/xt, px=c.X(x);
+      s+='<line x1="'+px+'" y1="'+c.Y(yr[0])+'" x2="'+px+'" y2="'+c.Y(yr[1])+'" stroke="#eef4f9"/>';
+      s+='<text x="'+px+'" y="'+(h-pad.b+16)+'" text-anchor="middle" font-size="11" fill="#455d72">'+fx(x)+'</text>';
+    }
+    for(let i=0;i<=yt;i++){
+      const y=yr[0]+(yr[1]-yr[0])*i/yt, py=c.Y(y);
+      s+='<line x1="'+c.X(xr[0])+'" y1="'+py+'" x2="'+c.X(xr[1])+'" y2="'+py+'" stroke="#eef4f9"/>';
+      s+='<text x="'+(pad.l-8)+'" y="'+(py+4)+'" text-anchor="end" font-size="11" fill="#455d72">'+fy(y)+'</text>';
+    }
+    const x0i = xr[0]>0 ? xr[0] : 0;
+    s+='<line x1="'+c.X(xr[0])+'" y1="'+c.Y(yr[0])+'" x2="'+c.X(xr[1])+'" y2="'+c.Y(yr[0])+'" stroke="#9fb4c6" stroke-width="1.2"/>';
+    s+='<line x1="'+c.X(x0i)+'" y1="'+c.Y(yr[0])+'" x2="'+c.X(x0i)+'" y2="'+c.Y(yr[1])+'" stroke="#9fb4c6" stroke-width="1.2"/>';
+    if(!opt.noLabel){
+      s+='<text x="'+(w/2)+'" y="'+(h-5)+'" text-anchor="middle" font-size="12" fill="#455d72">'+xlab+'</text>';
+      s+='<text x="12" y="'+(h/2)+'" font-size="12" fill="#455d72" transform="rotate(-90 12 '+(h/2)+')" text-anchor="middle">'+ylab+'</text>';
+    }
+    return s;
+  };
+  c.curve=function(f,x0,x1,color,opt){
+    opt=opt||{};
+    let p='';
+    for(let i=0;i<=320;i++){ const x=x0+(x1-x0)*i/320;
+      p+=(i?' L ':'M ')+c.X(x).toFixed(2)+' '+c.Y(f(x)).toFixed(2); }
+    return '<path d="'+p+'" fill="none" stroke="'+color+'" stroke-width="'+(opt.w||2.5)+'"'+(opt.dash?' stroke-dasharray="'+opt.dash+'"':'')+' opacity="'+(opt.op||1)+'"/>';
+  };
+  c.area=function(f,x0,x1,color,op,base){
+    // 关键：填充基线取 y=base（默认为 0 或视窗下界），且路径必须从 (x0,base) 起、
+    // 沿曲线到 (x1,f(x1))、再垂直落回 (x1,base) 闭合，才能真正表示「该区间曲线下的面积」
+    const b=(base===undefined)?Math.max(yr[0],0):base;
+    let p='M '+c.X(x0).toFixed(2)+' '+c.Y(b).toFixed(2);
+    for(let i=0;i<=180;i++){ const x=x0+(x1-x0)*i/180; p+=' L '+c.X(x).toFixed(2)+' '+c.Y(f(x)).toFixed(2); }
+    p+=' L '+c.X(x1).toFixed(2)+' '+c.Y(b).toFixed(2)+' Z';
+    return '<path d="'+p+'" fill="'+color+'" opacity="'+(op||0.26)+'" stroke="none"/>';
+  };
+  c.vline=function(x,color,dash,label,dy){
+    let s='<line x1="'+c.X(x)+'" y1="'+c.Y(yr[0])+'" x2="'+c.X(x)+'" y2="'+c.Y(yr[1])+'" stroke="'+color+'" stroke-width="1.4"'+(dash?' stroke-dasharray="5 4"':'')+'/>';
+    if(label!==undefined&&label!==null)
+      s+='<text class="mono" x="'+c.X(x)+'" y="'+(c.Y(yr[1])+(dy||12))+'" text-anchor="middle" font-size="11.5" fill="'+color+'">'+label+'</text>';
+    return s;
+  };
+  c.tag=function(x,y,text,color,anchor){
+    return '<text x="'+c.X(x)+'" y="'+c.Y(y)+'" text-anchor="'+(anchor||'middle')+'" font-size="11.5" fill="'+color+'" font-weight="600">'+text+'</text>';
+  };
+  return c;
+}
+/* α 拖动滑杆与 select 联动 */
+function bindAlpha(sliderId,selId,onChange){
+  const sl=$(sliderId);
+  if(!sl) return;
+  const sel=$(selId);
+  const label=$(sliderId.replace(/-s$/,"-v"));
+  const syncLabel=()=>{ if(label) label.textContent=(+sl.value).toFixed(3); };
+  sl.addEventListener("input",()=>{
+    // select 只作为快捷档位；若当前值恰好匹配某选项则高亮之，否则不动 select
+    if(sel){ [...sel.options].forEach(o=>{ if(Math.abs(+o.value - +sl.value)<1e-9) sel.value=o.value; }); }
+    syncLabel(); onChange();
+  });
+  if(sel) sel.addEventListener("change",()=>{ sl.value=+sel.value; syncLabel(); onChange(); });
+  syncLabel();
+}
+
+
+const C_BLUE="#17699b",C_RED="#94354f",C_GREEN="#1e7a4f",C_GRAY="#c5d3df",C_PUR="#6b55a2";
+/* 马卡龙色系 */
+const M_MINT="#8FDDB4";   /* β 区域填充：卡通感薄荷奶绿（明快柔和不刺眼） */
+const M_BETA_TXT="#1F8A5B"; /* β 文字：比填充深两档的绿，保证可读 */
+const M_SKY="#9FC6E8";    /* 马卡龙浅蓝：P 值 */
+const M_H1="#3E7FB8";     /* H₁ 曲线（蓝，虚线区分） */
+
+/* ===================== 正态 ===================== */
+const $=id=>document.getElementById(id);
+function f2(x){return (+x).toFixed(2);} function f3(x){return (+x).toFixed(3);} function f4(x){return (+x).toFixed(4);}
+function normPdf(x,mu,sd){ return Math.exp(-((x-mu)**2)/(2*sd*sd))/(sd*Math.sqrt(2*PI)); }
+function alphaOf(sel){
+  // α 以滑杆（id = sel + "-s"）为唯一数据源；滑杆不存在时才回退到 select
+  const sl=$(sel+"-s");
+  if(sl && sl.value!=="" && !isNaN(+sl.value)) return +sl.value;
+  const el=$(sel);
+  const v=el?parseFloat(el.value):NaN;
+  return isNaN(v)?0.05:v;
+}
+function tailsOf(sel){return $(sel).value;}
+function drawNorm(){
+  const mu=+$("n-mu").value, sd=+$("n-sd").value, a=alphaOf("alpha-norm"), tail=tailsOf("tail-norm");
+  $("n-mu-v").textContent=f1_(mu); $("n-sd-v").textContent=f1_(sd);
+  const w=640,h=320,pad={l:48,r:18,t:14,b:40};
+  // 固定视窗 x∈[-8,8]，y 上限按最窄 σ 的峰值定（σ=0.5 → 峰 0.798）
+  const c=mkc(w,h,pad,[-8,8],[0,0.92]);
+  const f=x=>normPdf(x,mu,sd);
+  let s=c.ax(8,4,f1_,f2,"x（原始取值）","概率密度");
+  // 参考：标准正态 N(0,1) 灰色虚线，便于对比 μ、σ 的效果
+  s+=c.curve(x=>normPdf(x,0,1),-8,8,"#b8c9d8",{w:1.6,dash:"6 4"});
+  // 拒绝域（尾面积 = α，红色阴影）
+  const zc = tail==="2" ? zQuant(1-a/2) : zQuant(1-a);
+  if(tail==="2"){
+    s+=c.area(f,-8,mu-zc,C_RED,0.32)+c.area(f,mu+zc,8,C_RED,0.32);
+  }else if(tail==="1"){
+    s+=c.area(f,mu+zc,8,C_RED,0.32);
+  }else{
+    s+=c.area(f,-8,mu-zc,C_RED,0.32);
+  }
+  // 曲线
+  s+=c.curve(f,-8,8,C_BLUE,{w:2.8});
+  // 界值线（原始尺度）
+  const lns = tail==="2" ? [mu-zc, mu+zc] : (tail==="1" ? [mu+zc] : [mu-zc]);
+  lns.forEach(x=>{ if(x>-8&&x<8) s+=c.vline(x,C_RED,true,f2(x)); });
+  // μ 位置标注
+  s+=c.vline(mu,"#455d72",false,null);
+  s+='<text x="'+c.X(mu)+'" y="'+(c.Y(0.92)-2)+'" text-anchor="middle" font-size="11.5" fill="#243e54" font-weight="700">μ='+f1_(mu)+'</text>';
+  // σ 标注：在 μ±σ 处画小横标
+  [-1,1].forEach(k=>{
+    const x=mu+k*sd; if(x<=-8||x>=8) return;
+    s+='<line x1="'+c.X(x)+'" y1="'+c.Y(0)+'" x2="'+c.X(x)+'" y2="'+(c.Y(0)+8)+'" stroke="'+C_GREEN+'" stroke-width="2"/>';
+  });
+  s+='<text x="'+c.X(Math.min(mu+sd*1.4,7.2))+'" y="'+(c.Y(0)+24)+'" font-size="11.5" fill="'+C_GREEN+'">μ±σ（σ='+f1_(sd)+'）</text>';
+  // α 面积标注
+  const aTxt = tail==="2" ? ("两侧红色面积合计 = α = "+a.toFixed(3)+"（每侧 "+ (a/2).toFixed(4)+"）")
+                          : ("单侧红色面积 = α = "+a.toFixed(3));
+  s+='<text x="'+(w-22)+'" y="'+(pad.t+16)+'" text-anchor="end" font-size="13" fill="'+C_RED+'" font-weight="700">'+aTxt+'</text>';
+  s+='<text x="'+(w-22)+'" y="'+(pad.t+38)+'" text-anchor="end" font-size="12.5" fill="#5a6f80">界值 x = μ '+(tail==="1"?"+":(tail==="1l"?"−":"±"))+' '+f2(zc)+'σ → '+f2(mu+zc)+(tail==="2"?" 与 "+f2(mu-zc):"")+'</text>';
+  wrap("svg-norm",s,w,h);
+
+  // 界值表
+  const rows=[["双侧","α/2","2.576","1.960","1.645"],["单侧","α","2.326","1.645","1.282"]];
+  let t='<tr><th>检验方式</th><th>尾面积</th><th>α=0.01</th><th>α=0.05</th><th>α=0.10</th></tr>';
+  const key = tail==="2"?"双侧":"单侧";
+  rows.forEach(r=>{ const hl=r[0]===key?' class="hl"':'';
+    t+='<tr'+hl+'><td>'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td><td>'+r[4]+'</td></tr>'; });
+  $("crit-norm").innerHTML=t;
+
+  // 形态说明
+  const info=$("n-shape");
+  if(info){
+    const peak=normPdf(mu,mu,sd);
+    const iqr=2*1.349*sd;
+    info.innerHTML="当前 N("+f1_(mu)+", "+f1_(sd)+"²)："+
+      "<br>峰值 = 1/(σ√2π) = <b>"+f3(peak)+"</b>（σ 越大峰越低、越「矮胖」）"+
+      "<br>μ 是曲线的对称中心，<b>只平移不改形状</b>；σ 决定离散度，<b>只改宽窄不改位置</b>"+
+      "<br>μ±1σ 内约 68.3%、±1.96σ 内 95%、±2.58σ 内 99%——这就是 z 界值与参考值范围的来源。";
+  }
+}
+function f1_(x){return (+x).toFixed(1);}
+function judgeNorm(){
+  const mu=+$("n-mu").value, sd=+$("n-sd").value, a=alphaOf("alpha-norm"), tail=tailsOf("tail-norm");
+  const z=+$("z-stat").value;
+  if(isNaN(z)){alert("请输入检验统计量 Z 的数值。");return;}
+  const zs=(z-mu)/sd;
+  let p = tail==="2" ? 2*(1-phi(Math.abs(zs))) : (tail==="1"? 1-phi(zs) : phi(zs));
+  const rej = p<a;
+  const v=$("v-norm"); v.hidden=false;
+  v.className="verdict "+(rej?"ok":"ns");
+  v.innerHTML="标准化 Z = "+f2(zs)+"，P = "+f4(p)+" "+(rej?"&lt;":"≥")+" α = "+a+" → "+(rej?"落入拒绝域，按 α 水准拒绝 H₀":"未落入拒绝域，尚不能拒绝 H₀");
+}
+/* ===================== t ===================== */
+function drawT(){
+  const df=+$("t-df").value, a=alphaOf("alpha-t"), tail=tailsOf("tail-t");
+  $("t-df-v").textContent=df;
+  const w=680,h=360,pad={l:50,r:20,t:58,b:44};
+  // 固定视窗：横向 -6~6；纵向 0~0.43（须容纳正态峰值 0.399）
+  const c=mkc(w,h,pad,[-6,6],[0,0.43]);
+  const f=x=>tPdf(x,df), g=x=>normPdf(x,0,1);
+  let s=c.ax(6,4,f2,f3,"t 值","概率密度");
+
+  /* ---------- 配色与线型：三条参考曲线彼此可区分 ---------- */
+  const C_NU1="#C2410C";   // ν=1  橙（实线细）
+  const C_NU3="#7A5195";   // ν=3  紫（点线）
+  const C_NORM="#0E8A6E";  // 正态 深绿（长虚线，最粗）
+
+  // 参考 1：ν=1（橙色实线，width 1.8）
+  if(df!==1) s+=c.curve(x=>tPdf(x,1),-6,6,C_NU1,{w:1.8,op:0.9});
+  // 参考 2：ν=3（紫色点线）
+  if(df!==3) s+=c.curve(x=>tPdf(x,3),-6,6,C_NU3,{w:1.9,dash:"2 3",op:0.95});
+  // 极限：标准正态（深绿长虚线，最粗，视觉上压住前两者）
+  s+=c.curve(g,-6,6,C_NORM,{w:2.6,dash:"9 5"});
+
+  // 拒绝域
+  const crit = tail==="2"? quantile(x=>tCDF(x,df),1-a/2,-40,40)
+            : (tail==="1"? quantile(x=>tCDF(x,df),1-a,-40,40)
+            : quantile(x=>tCDF(x,df),a,-40,40));
+  if(tail==="2"){ s+=c.area(f,-6,-crit,C_RED,0.26)+c.area(f,crit,6,C_RED,0.26); }
+  else if(tail==="1"){ s+=c.area(f,crit,6,C_RED,0.26); }
+  else { s+=c.area(f,-6,crit,C_RED,0.26); }
+
+  // 主曲线（当前 ν，蓝色最粗，最后画以压在最上层）
+  s+=c.curve(f,-6,6,C_BLUE,{w:3.4});
+
+  // 界值竖线
+  const lns = tail==="2" ? [-crit,crit] : [crit];
+  lns.forEach(x=> s+=c.vline(x,C_RED,true,f2(x)));
+
+  // 同 α 下的 z 界值对照（深绿细点线）
+  const zc = tail==="2"? zQuant(1-a/2) : (tail==="1"? zQuant(1-a):zQuant(a));
+  s+='<line x1="'+c.X(zc)+'" y1="'+c.Y(0)+'" x2="'+c.X(zc)+'" y2="'+c.Y(0.43)+'" stroke="'+C_NORM+'" stroke-dasharray="3 3" stroke-width="1.3"/>';
+  if(tail==="2") s+='<line x1="'+c.X(-zc)+'" y1="'+c.Y(0)+'" x2="'+c.X(-zc)+'" y2="'+c.Y(0.43)+'" stroke="'+C_NORM+'" stroke-dasharray="3 3" stroke-width="1.3"/>';
+
+  /* ---------- 图例（顶部，带线型样例，一眼分辨） ---------- */
+  const ly=20;
+  let lx=pad.l;
+  const item=(label,color,dash,width,dx)=>{
+    let g2='<line x1="'+lx+'" y1="'+ly+'" x2="'+(lx+26)+'" y2="'+ly+'" stroke="'+color+'" stroke-width="'+width+'"'+(dash?' stroke-dasharray="'+dash+'"':'')+'/>';
+    g2+='<text x="'+(lx+32)+'" y="'+(ly+4)+'" font-size="12" fill="#243e54">'+label+'</text>';
+    lx+=dx;
+    return g2;
+  };
+  s+=item('t(ν='+df+') 当前',C_BLUE,null,3.4,132);
+  s+=item('t(1)',C_NU1,null,1.8,66);
+  s+=item('t(3)',C_NU3,"2 3",1.9,66);
+  s+=item('N(0,1) 极限',C_NORM,"9 5",2.6,118);
+  s+='<line x1="'+lx+'" y1="'+ly+'" x2="'+(lx+26)+'" y2="'+ly+'" stroke="'+C_RED+'" stroke-width="1.4" stroke-dasharray="5 4"/>';
+  s+='<text x="'+(lx+32)+'" y="'+(ly+4)+'" font-size="12" fill="'+C_RED+'">拒绝域 / 界值</text>';
+
+  // 右上角补充：z 界值数值
+  s+='<text x="'+(w-22)+'" y="'+(h-pad.b-6)+'" text-anchor="end" font-size="11.5" fill="'+C_NORM+'">绿点线 = 同 α 下 z 界值 '+f2(zc)+'</text>';
+  wrap("svg-t",s,w,h);
+
+  // 界值表（同时列 z 界值作对照）
+  const dfs=[1,2,3,5,10,20,30,60,120];
+  let tbl='<tr><th>ν</th><th>t₀.₁₀ 单侧</th><th>t₀.₀₅ 单侧</th><th>t₀.₀₅ 双侧</th><th>t₀.₀₁ 双侧</th><th>双侧/正态</th></tr>';
+  dfs.forEach(d=>{
+    const q1=quantile(x=>tCDF(x,d),0.90,-60,60);
+    const q2=quantile(x=>tCDF(x,d),0.95,-60,60);
+    const q3=quantile(x=>tCDF(x,d),0.975,-60,60);
+    const q4=quantile(x=>tCDF(x,d),0.995,-60,60);
+    const hl = d===df?' class="hl"':'';
+    const ratio=(q3/1.96).toFixed(2);
+    tbl+='<tr'+hl+'><td>'+(d===120?"→∞":d)+'</td><td>'+f3(q1)+'</td><td>'+f3(q2)+'</td><td>'+f3(q3)+'</td><td>'+f3(q4)+'</td><td>'+ratio+'×</td></tr>';
+  });
+  tbl+='<tr style="color:#0E8A6E"><td>正态</td><td>1.282</td><td>1.645</td><td>1.960</td><td>2.576</td><td>1.00×</td></tr>';
+  $("crit-t").innerHTML=tbl;
+
+  const info=$("t-shape");
+  if(info){
+    info.innerHTML="当前 t(ν="+df+")：峰值 = <b>"+f3(tPdf(0,df))+"</b>（正态峰 0.399）；"+
+      "t₀.₀₅/₂ 界值 = <b>"+f3(crit)+"</b>，是正态界值 1.960 的 <b>"+(crit/1.96).toFixed(2)+" 倍</b>。"+
+      "<br>ν 增大 → 峰升高、尾部变薄、界值向 1.96 靠拢；ν→∞ 时 t 分布<b>就是</b>标准正态分布。"+
+      (df>=60?"<br>当前 ν 已较大，蓝色与绿色几乎重合，用 z 近似误差很小。":"<br>当前 ν 较小，橙色 t(1) 的尾巴最厚、紫色 t(3) 次之，二者都高于绿色正态曲线——这就是「小样本尾部厚」的直观含义。");
+  }
+}
+function judgeT(){
+  const df=+$("t-df").value,a=alphaOf("alpha-t"),tail=tailsOf("tail-t");
+  const t=+$("tstat-stat").value;
+  if(isNaN(t)){alert("请输入 t 统计量数值。");return;}
+  let p=tail==="2"?2*(1-tCDF(Math.abs(t),df)):(tail==="1"?1-tCDF(t,df):tCDF(t,df));
+  const rej=p<a;
+  const v=$("v-t"); v.hidden=false; v.className="verdict "+(rej?"ok":"ns");
+  v.innerHTML="ν = "+df+"，P = "+f4(p)+" "+(rej?"&lt;":"≥")+" α = "+a+" → "+(rej?"拒绝 H₀":"尚不能拒绝 H₀");
+}
+/* ===================== chi2 ===================== */
+function drawChi(){
+  const df=+$("c-df").value,a=alphaOf("alpha-c");
+  $("c-df-v").textContent=df;
+  const w=640,h=320,pad={l:46,r:16,t:12,b:38};
+  const xmax=Math.max(10,quantile(x=>chi2CDF(x,df),0.999,0,500)*1.05);
+  const c=chartSVG(w,h,pad,[0,xmax],[0,0.9]);
+  let ymax=0; for(let i=1;i<=400;i++){ymax=Math.max(ymax,chi2Pdf(xmax*i/400,df));}
+  const c2=chartSVG(w,h,pad,[0,xmax],[0,ymax*1.15]);
+  const f=x=>chi2Pdf(x,df);
+  const crit=quantile(x=>chi2CDF(x,df),1-a,0,500);
+  let s='<path d="'+areaPath(c2,f,crit,xmax,140)+'" fill="'+C_RED+'" opacity="0.28"/>';
+  s+='<path d="'+curvePath(c2,f,0.001,xmax,300)+'" fill="none" stroke="'+C_BLUE+'" stroke-width="2.5"/>';
+  s+='<line x1="'+c2.X(crit)+'" y1="'+c2.Y(0)+'" x2="'+c2.X(crit)+'" y2="'+c2.Y(ymax*1.15)+'" stroke="'+C_RED+'" stroke-dasharray="5 4"/>';
+  s+='<text x="'+c2.X(crit)+'" y="'+(c2.Y(ymax*1.15)+12)+'" text-anchor="middle" font-size="11.5" fill="'+C_RED+'" font-family="monospace">'+f2(crit)+'</text>';
+  s+=axes(c2,7,4,f2,f3,"χ²","密度");
+  wrap("svg-chi2",s,w,h);
+  let tbl='<tr><th>ν</th><th>α=0.10</th><th>α=0.05</th><th>α=0.01</th></tr>';
+  for(let d=1;d<=10;d++){
+    const q1=quantile(x=>chi2CDF(x,d),0.90,0,500),q2=quantile(x=>chi2CDF(x,d),0.95,0,500),q3=quantile(x=>chi2CDF(x,d),0.99,0,500);
+    tbl+='<tr'+(d==df?' class="hl"':'')+'><td>'+d+'</td><td>'+f3(q1)+'</td><td>'+f3(q2)+'</td><td>'+f3(q3)+'</td></tr>';
+  }
+  $("crit-c").innerHTML=tbl;
+}
+function judgeChi(){
+  const df=+$("c-df").value,a=alphaOf("alpha-c");
+  const x=+$("c-stat").value;
+  if(isNaN(x)||x<0){alert("请输入非负的 χ² 统计量。");return;}
+  const p=1-chi2CDF(x,df),rej=p<a;
+  const v=$("v-c");v.hidden=false;v.className="verdict "+(rej?"ok":"ns");
+  v.innerHTML="ν = "+df+"，右侧 P = "+f4(p)+" "+(rej?"&lt;":"≥")+" α = "+a+" → "+(rej?"拒绝 H₀":"尚不能拒绝 H₀");
+}
+/* ===================== F ===================== */
+function drawF(){
+  const d1=+$("f-df1").value, d2=+$("f-df2").value, a=alphaOf("alpha-f");
+  $("f-df1-v").textContent=d1; $("f-df2-v").textContent=d2;
+  const w=640,h=340,pad={l:48,r:18,t:16,b:42};
+  // 固定视窗 x 0~5，y 0~1.5（F(1,大) 峰值约 0.9）
+  const c=mkc(w,h,pad,[0,5],[0,1.55]);
+  const f=x=>fPdf(x,d1,d2);
+  let s=c.ax(10,5,f2,f2,"F 值","概率密度");
+  // ---- 三种「族」参照曲线：固定一个自由度、扫另一个 ----
+  // 淡色参照：与当前共享 ν₂ 但 ν₁ 不同（蓝系）；共享 ν₁ 但 ν₂ 不同（紫系）
+  const d1ref=[1,5,15].filter(v=>v!==d1).slice(0,2);
+  const d2ref=[5,30].filter(v=>v!==d2).slice(0,1);
+  d1ref.forEach(v=> s+=c.curve(x=>fPdf(x,v,d2),0,5,"#b9d1e3",{w:1.5}));
+  d2ref.forEach(v=> s+=c.curve(x=>fPdf(x,d1,v),0,5,"#cbbfe4",{w:1.5,dash:"4 3"}));
+  // 拒绝域
+  const crit=quantile(x=>fCDF(x,d1,d2),1-a,0,900);
+  s+=c.area(f,crit,5,C_RED,0.26);
+  // 主曲线
+  s+=c.curve(f,0.002,5,C_BLUE,{w:3});
+  s+=c.vline(crit,C_RED,true,f2(crit));
+  // 峰值位置
+  const mode = d1>2 ? ((d1-2)*d2)/(d1*(d2+2)) : null;
+  if(mode!==null && mode<5) s+='<circle cx="'+c.X(mode)+'" cy="'+c.Y(f(mode))+'" r="3" fill="#1e7a4f"/>';
+  // 注记
+  s+='<text class="ann-title" x="'+(pad.l+8)+'" y="'+(pad.t+14)+'" font-size="13.5" fill="'+C_BLUE+'">F(ν₁='+d1+', ν₂='+d2+')</text>';
+  s+='<text class="ann" x="'+(pad.l+8)+'" y="'+(pad.t+36)+'" font-size="12.5">浅蓝实线：ν₂='+d2+' 不变，ν₁ 取 '+d1ref.join('、')+'</text>';
+  s+='<text class="ann" x="'+(pad.l+8)+'" y="'+(pad.t+58)+'" font-size="12.5">浅紫虚线：ν₁='+d1+' 不变，ν₂ 取 '+d2ref.join('、')+'</text>';
+  wrap("svg-F",s,w,h);
+
+  // ---- 第二视图：ν₁、ν₂ 的「效应条」小图 ----
+  drawFSweep(d1,d2,a);
+
+  // 界值表
+  const v1s=[1,2,3,4,5,8,10,20],v2s=[2,5,10,15,20,30,60];
+  let tbl='<tr><th>ν₂\\ν₁</th>'+v1s.map(x=>'<th>'+x+'</th>').join('')+'</tr>';
+  v2s.forEach(v2=>{
+    tbl+='<tr'+(v2===d2?' class="hl"':'')+'><td><b>'+v2+'</b></td>'+
+      v1s.map(v1=>{ const q=quantile(x=>fCDF(x,v1,v2),0.95,0,900);
+        return '<td'+(v1===d1&&v2===d2?' style="background:#fff3c9;font-weight:700"':'')+'>'+f2(q)+'</td>'; }).join('')+'</tr>';
+  });
+  $("crit-f").innerHTML=tbl;
+
+  const info=$("f-shape");
+  if(info){
+    info.innerHTML="当前 F("+d1+","+d2+")：界值 F₀.₀₅ = <b>"+f2(crit)+"</b>"+
+      (mode!==null?"，峰值位置 = "+f3(mode):"，ν₁≤2 时峰值在 0 处单调下降")+
+      "<br><b>ν₁（分子自由度）↑</b> → 曲线右移、峰值降低、右尾变薄 → 界值变小（更容易得出有统计学意义的结论）"+
+      "<br><b>ν₂（分母自由度）↑</b> → 曲线变窄、更集中 → 界值也变小（误差估计更稳，检验更有力）"+
+      "<br>右下小图中两条曲线分别只改 ν₁ 或只改 ν₂，可单独看每个参数的作用。";
+  }
+}
+/* F 的双参数效应小图：左=固定 ν₂ 扫 ν₁；右=固定 ν₁ 扫 ν₂ */
+function drawFSweep(d1,d2,a){
+  const W=640,H=150,pad={l:48,r:18,t:26,b:30};
+  const c=mkc(W,H,pad,[0,5],[0,1.55]);
+  let s=c.ax(5,2,f2,f2,"","",{noLabel:true});
+  const cols1=["#cfe3f2","#8cbcd9","#4a92bb","#17699b"];
+  const vs1=[1,3,8,20];
+  vs1.forEach((v,i)=> s+=c.curve(x=>fPdf(x,v,d2),0.002,5,cols1[i],{w:2}));
+  s+='<text x="'+(pad.l)+'" y="14" font-size="11.5" fill="'+C_BLUE+'" font-weight="600">只改 ν₁（ν₂='+d2+' 固定）→ 越靠右越浅的线 ν₁ 越大</text>';
+  s+=c.vline(quantile(x=>fCDF(x,d1,d2),1-a,0,900),C_RED,true,f2(quantile(x=>fCDF(x,d1,d2),1-a,0,900)));
+  wrap("svg-f-sweep1",s,W,H);
+
+  const c2=mkc(W,H,pad,[0,5],[0,1.55]);
+  let s2=c2.ax(5,2,f2,f2,"","",{noLabel:true});
+  const cols2=["#e2d9f3","#b9a6dd","#8b6fb8","#6b55a2"];
+  const vs2=[3,10,30,120];
+  vs2.forEach((v,i)=> s2+=c2.curve(x=>fPdf(x,d1,v),0.002,5,cols2[i],{w:2}));
+  s2+='<text x="'+(pad.l)+'" y="14" font-size="11.5" fill="'+C_PUR+'" font-weight="600">只改 ν₂（ν₁='+d1+' 固定）→ 越浅的线 ν₂ 越大（曲线越窄越高）</text>';
+  wrap("svg-f-sweep2",s2,W,H);
+}
+function judgeF(){
+  const d1=+$("f-df1").value,d2=+$("f-df2").value,a=alphaOf("alpha-f");
+  const x=+$("f-stat").value;
+  if(isNaN(x)||x<0){alert("请输入非负的 F 统计量。");return;}
+  const p=1-fCDF(x,d1,d2),rej=p<a;
+  const v=$("v-f");v.hidden=false;v.className="verdict "+(rej?"ok":"ns");
+  v.innerHTML="F("+d1+","+d2+")，P = "+f4(p)+" "+(rej?"&lt;":"≥")+" α = "+a+" → "+(rej?"拒绝 H₀":"尚不能拒绝 H₀");
+}
+/* ===================== 二项 ===================== */
+function drawBinom(){
+  const n=+$("b-n").value,p=+$("b-p").value,a=alphaOf("alpha-b");
+  $("b-n-v").textContent=n;$("b-p-v").textContent=f2(p);
+  const w=640,h=320,pad={l:46,r:16,t:12,b:38};
+  const c0=chartSVG(w,h,pad,[-0.6,n+0.6],[0,1]);
+  let ymax=0; for(let k=0;k<=n;k++)ymax=Math.max(ymax,binomPmf(k,n,p));
+  const c=chartSVG(w,h,pad,[-0.6,n+0.6],[0,ymax*1.18]);
+  // 拒绝域：两侧累计概率 <= a/2 的最外尾
+  let lo=0,lc=0; while(lo<=n && lc+binomPmf(lo,n,p)<=a/2){lc+=binomPmf(lo,n,p);lo++;}
+  let hi=n,hc=0; while(hi>=0 && hc+binomPmf(hi,n,p)<=a/2){hc+=binomPmf(hi,n,p);hi--;}
+  let s='';
+  const bw=(c.X(1)-c.X(0))*0.82;
+  for(let k=0;k<=n;k++){
+    const inR = k<lo||k>hi;
+    const x=c.X(k)-bw/2, y=c.Y(binomPmf(k,n,p));
+    s+='<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+(c.Y(0)-y).toFixed(1)+'" fill="'+(inR?C_RED:C_BLUE)+'" opacity="'+(inR?0.75:0.9)+'"/>';
+  }
+  // 正态近似
+  if(n*p*(1-p)>=2){
+    const mu=n*p,sd=Math.sqrt(n*p*(1-p));
+    const f=x=>normPdf(x,mu,sd);
+    s+='<path d="'+curvePath(c,f,-0.6,n+0.6,240)+'" fill="none" stroke="'+C_GREEN+'" stroke-width="1.8" stroke-dasharray="6 4"/>';
+  }
+  s+=axes(c,Math.min(10,n+1),4,v=>Math.round(v),f3,"k（成功次数）","P(X=k)");
+  const tailArea=lc+hc;
+  s+='<text x="'+(c.w/2)+'" y="24" text-anchor="middle" font-size="13" fill="'+C_RED+'" font-weight="600">红色柱 = 精确拒绝域：实际尾面积 = '+f4(tailArea)+' ≤ α = '+a.toFixed(3)+'</text>';
+  s+='<text x="'+(c.w/2)+'" y="46" text-anchor="middle" font-size="12.5" fill="#5a6f80">拒绝区间：X ≤ '+(lo-1)+' 或 X ≥ '+(hi+1)+'（离散分布无法刚好切出 α，故实际面积略小于 α）</text>';
+  wrap("svg-binom",s,w,h);
+}
+function calcBinom(){
+  const n=+$("b-n").value,p=+$("b-p").value;
+  let k=Math.round(+$("b-k").value);
+  if(isNaN(k)){alert("请输入成功次数 k。");return;}
+  k=Math.max(0,Math.min(n,k));
+  const pmf=binomPmf(k,n,p);
+  let le=0,ge=0; for(let i=0;i<=k;i++)le+=binomPmf(i,n,p); for(let i=k;i<=n;i++)ge+=binomPmf(i,n,p);
+  const mu=n*p,sd=Math.sqrt(n*p*(1-p));
+  $("b-prob").innerHTML="P(X="+k+") = <b>"+f4(pmf)+"</b>；P(X≤"+k+") = "+f4(le)+"；P(X≥"+k+") = "+f4(ge)+
+    "<br>理论均数 nπ = "+f2(mu)+"，理论方差 nπ(1−π) = "+f2(n*p*(1-p))+
+    (n*p*(1-p)>=5?"　（np(1−p) ≥ 5，正态近似可用，虚线即近似曲线）":"　（np(1−p) &lt; 5，正态近似不可靠，看虚线与柱形的偏离！）");
+}
+/* ===================== 泊松 ===================== */
+function drawPois(){
+  const lam=+$("p-lam").value,a=alphaOf("alpha-p");
+  $("p-lam-v").textContent=f1_(lam);
+  const kmax=Math.max(10,Math.ceil(lam+4*Math.sqrt(lam)+3));
+  let ymax=0; for(let k=0;k<=kmax;k++)ymax=Math.max(ymax,poisPmf(k,lam));
+  const w=640,h=320,pad={l:46,r:16,t:12,b:38};
+  const c=chartSVG(w,h,pad,[-0.6,kmax+0.6],[0,ymax*1.18]);
+  // 右侧拒绝域
+  let hi=kmax,hc=0; while(hi>=0 && hc+poisPmf(hi,lam)<=a){hc+=poisPmf(hi,lam);hi--;}
+  let lo=0,lc=0; while(lo<=kmax && lc+poisPmf(lo,lam)<=a){lc+=poisPmf(lo,lam);lo++;}
+  let s='';
+  const bw=(c.X(1)-c.X(0))*0.8;
+  for(let k=0;k<=kmax;k++){
+    const inR = k<lo||k>hi;
+    const x=c.X(k)-bw/2,y=c.Y(poisPmf(k,lam));
+    s+='<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+(c.Y(0)-y).toFixed(1)+'" fill="'+(inR?C_RED:C_BLUE)+'" opacity="'+(inR?0.75:0.9)+'"/>';
+  }
+  if(lam>=15){
+    const f=x=>normPdf(x,lam,Math.sqrt(lam));
+    s+='<path d="'+curvePath(c,f,-0.6,kmax+0.6,240)+'" fill="none" stroke="'+C_GREEN+'" stroke-width="1.8" stroke-dasharray="6 4"/>';
+  }
+  s+=axes(c,Math.min(10,kmax+1),4,v=>Math.round(v),f3,"k（事件计数）","P(X=k)");
+  const tailArea2=lc+hc;
+  s+='<text x="'+(c.w/2)+'" y="24" text-anchor="middle" font-size="13" fill="'+C_RED+'" font-weight="600">红色柱 = 双侧精确拒绝域：实际尾面积 = '+f4(tailArea2)+' ≤ α = '+a.toFixed(3)+'</text>';
+  s+='<text x="'+(c.w/2)+'" y="46" text-anchor="middle" font-size="12.5" fill="#5a6f80">拒绝区间：X ≤ '+(lo-1)+' 或 X ≥ '+(hi+1)+'</text>';
+  wrap("svg-pois",s,w,h);
+}
+function calcPois(){
+  const lam=+$("p-lam").value;
+  let k=Math.max(0,Math.round(+$("p-k").value||0));
+  const pmf=poisPmf(k,lam),le=poisCDF(k,lam);
+  const ge=1-le+pmf;
+  $("p-prob").innerHTML="P(X="+k+") = <b>"+f4(pmf)+"</b>；P(X≤"+k+") = "+f4(le)+"；P(X≥"+k+") = "+f4(ge)+
+    "<br>均数 = 方差 = λ = "+f1_(lam)+"；计数 X 的标准误 ≈ √λ = "+f2(Math.sqrt(lam));
+}
+/* ===================== 多元正态 ===================== */
+function drawMvn(){
+  const rho=+$("m-rho").value, xs=+$("m-x1").value, s1=+$("m-s1").value, s2=+$("m-s2").value;
+  $("m-rho-v").textContent=f2(rho); $("m-x1-v").textContent=f1_(xs);
+  $("m-s1-v").textContent=f1_(s1); $("m-s2-v").textContent=f1_(s2);
+  const det=1-rho*rho;
+  const inv=[[1/det, -rho/det],[-rho/det, 1/det]];
+  const dens=(x1,x2)=>{
+    const u=(x1/s1), v=(x2/s2);
+    const q=inv[0][0]*u*u+2*inv[0][1]*u*v+inv[1][1]*v*v;
+    return Math.exp(-q/2)/(2*PI*s1*s2*Math.sqrt(Math.max(det,1e-9)));
+  };
+  const peak=1/(2*PI*s1*s2*Math.sqrt(Math.max(det,1e-9)));
+
+  /* ---------- 图1：三维曲面（网格线框 + 等高线投影） ---------- */
+  const w=560,h=420,pad={l:20,r:20,t:14,b:20};
+  const R=3.0;
+  // 等距投影：屏幕坐标 = 原点 + x1方向 + x2方向 + z方向
+  const ox=w/2, oy=h*0.60, kx=w*0.30, ky=-h*0.155, kz=h*0.42;
+  const proj=(x1,x2,z)=>{
+    const u=x1/R, v=x2/R;
+    return [ox + (u-v)*kx, oy + (u+v)*ky - (z/peak)*kz];
+  };
+  let sv='';
+  // 底面网格
+  for(let i=-2;i<=2;i++){
+    const [xa,ya]=proj(i*R/2,-R,0), [xb,yb]=proj(i*R/2,R,0);
+    sv+='<line x1="'+xa+'" y1="'+ya+'" x2="'+xb+'" y2="'+yb+'" stroke="#dbe8f2" stroke-width="1"/>';
+    const [xc,yc]=proj(-R,i*R/2,0), [xd,yd]=proj(R,i*R/2,0);
+    sv+='<line x1="'+xc+'" y1="'+yc+'" x2="'+xd+'" y2="'+yd+'" stroke="#dbe8f2" stroke-width="1"/>';
+  }
+  // 等高线投影到底面
+  [0.15,0.35,0.55,0.75].forEach((frac,i)=>{
+    const q=-2*Math.log(frac); // 密度 = peak*frac 对应的二次型
+    let pts='';
+    const step=90;
+    for(let t=0;t<=step;t++){
+      const th=2*PI*t/step;
+      // 椭圆半轴：沿 (1,1)/√2 为 √(q/(1+ρ))，沿 (1,-1)/√2 为 √(q/(1-ρ))，再乘 σ
+      const a=Math.sqrt(q/(1+rho))*s1, b=Math.sqrt(q/(1-rho))*s1;
+      const uu=a*Math.cos(th)/s1, vv=b*Math.sin(th)/s1;
+      const x1=(uu*Math.cos(PI/4)-vv*Math.sin(PI/4))*s1;
+      const x2=(uu*Math.sin(PI/4)+vv*Math.cos(PI/4))*s2;
+      const p=proj(x1,x2,0);
+      pts+=(t?' L ':'M ')+p[0].toFixed(1)+' '+p[1].toFixed(1);
+    }
+    sv+='<path d="'+pts+' Z" fill="none" stroke="#8fb4cf" stroke-width="1.1" opacity="'+(0.4+i*0.15)+'"/>';
+  });
+  // 曲面网格（线框）
+  const NG=16;
+  for(let i=0;i<=NG;i++){
+    let p='';
+    for(let j=0;j<=NG;j++){
+      const x1=-R+2*R*i/NG, x2=-R+2*R*j/NG;
+      const q=proj(x1,x2,dens(x1,x2));
+      p+=(j?' L ':'M ')+q[0].toFixed(1)+' '+q[1].toFixed(1);
+    }
+    sv+='<path d="'+p+'" fill="none" stroke="#17699b" stroke-width="1" opacity="0.45"/>';
+  }
+  for(let j=0;j<=NG;j++){
+    let p='';
+    for(let i=0;i<=NG;i++){
+      const x1=-R+2*R*i/NG, x2=-R+2*R*j/NG;
+      const q=proj(x1,x2,dens(x1,x2));
+      p+=(i?' L ':'M ')+q[0].toFixed(1)+' '+q[1].toFixed(1);
+    }
+    sv+='<path d="'+p+'" fill="none" stroke="#17699b" stroke-width="1" opacity="0.35"/>';
+  }
+  // 轴
+  const o=proj(-R,-R,0), e1=proj(R,-R,0), e2=proj(-R,R,0), ez=proj(-R,-R,peak*1.05);
+  sv+='<line x1="'+o[0]+'" y1="'+o[1]+'" x2="'+e1[0]+'" y2="'+e1[1]+'" stroke="#243e54" stroke-width="1.6"/>';
+  sv+='<line x1="'+o[0]+'" y1="'+o[1]+'" x2="'+e2[0]+'" y2="'+e2[1]+'" stroke="#243e54" stroke-width="1.6"/>';
+  sv+='<line x1="'+o[0]+'" y1="'+o[1]+'" x2="'+ez[0]+'" y2="'+ez[1]+'" stroke="#243e54" stroke-width="1.6"/>';
+  sv+='<text x="'+(e1[0]+6)+'" y="'+(e1[1]+14)+'" font-size="12" fill="#243e54" font-weight="600">x₁</text>';
+  sv+='<text x="'+(e2[0]-6)+'" y="'+(e2[1]+2)+'" font-size="12" fill="#243e54" font-weight="600" text-anchor="end">x₂</text>';
+  sv+='<text x="'+(ez[0]-8)+'" y="'+(ez[1])+'" font-size="12" fill="#243e54" font-weight="600" text-anchor="end">f(x₁,x₂)</text>';
+  sv+='<text class="ann-title" x="30" y="26" font-size="13.5" fill="#17699b">二元正态密度曲面 · ρ = '+f2(rho)+'</text>';
+  sv+='<text class="ann" x="30" y="50" font-size="12.5">底面上的椭圆 = 等高线投影；ρ 越大，椭圆越被压成一条斜线</text>';
+  wrap("svg-mvn",sv,w,h);
+
+  /* ---------- 图2：等高线俯视图 + 条件分布切片 ---------- */
+  const W=560,H=380,pad2={l:44,r:16,t:16,b:36};
+  const c=mkc(W,H,pad2,[-3.2,3.2],[-3.2,3.2]);
+  let svg2=c.ax(6,6,f1_,f1_,"x₁","x₂");
+  // 椭圆族
+  [0.1,0.3,0.5,0.7,0.85,0.95].forEach((frac,i)=>{
+    const q=-2*Math.log(frac);
+    let pts='';
+    for(let t=0;t<=120;t++){
+      const th=2*PI*t/120;
+      const a=Math.sqrt(q/(1+rho))*s1, b=Math.sqrt(q/(1-rho))*s1;
+      const uu=a*Math.cos(th)/s1, vv=b*Math.sin(th)/s1;
+      const x1=(uu*Math.cos(PI/4)-vv*Math.sin(PI/4))*s1;
+      const x2=(uu*Math.sin(PI/4)+vv*Math.cos(PI/4))*s2;
+      pts+=(t?' L ':'M ')+c.X(x1).toFixed(1)+' '+c.Y(x2).toFixed(1);
+    }
+    const op=0.25+i*0.13;
+    svg2+='<path d="'+pts+' Z" fill="none" stroke="#17699b" stroke-width="'+(1.2+i*0.25)+'" opacity="'+op+'"/>';
+  });
+  // 当前切片 x1 = xs（竖线）
+  svg2+='<line x1="'+c.X(xs)+'" y1="'+c.Y(-3.2)+'" x2="'+c.X(xs)+'" y2="'+c.Y(3.2)+'" stroke="'+C_RED+'" stroke-width="2"/>';
+  svg2+='<text x="'+c.X(xs)+'" y="'+(c.Y(3.2)-6)+'" text-anchor="middle" font-size="11.5" fill="'+C_RED+'" font-weight="600">x₁ = '+f1_(xs)+'</text>';
+  // 条件分布 E[X2|x1] 的位置（红点）与 ±1条件SD 范围
+  const cmean = rho*(xs/s1)*s2;
+  const csd = s2*Math.sqrt(1-rho*rho);
+  svg2+='<line x1="'+c.X(xs)+'" y1="'+c.Y(cmean-csd)+'" x2="'+c.X(xs)+'" y2="'+c.Y(cmean+csd)+'" stroke="'+C_RED+'" stroke-width="7" opacity="0.35"/>';
+  svg2+='<circle cx="'+c.X(xs)+'" cy="'+c.Y(cmean)+'" r="6" fill="'+C_RED+'"/>';
+  svg2+='<text x="'+(c.X(xs)+10)+'" y="'+(c.Y(cmean)-8)+'" font-size="11.5" fill="'+C_RED+'" font-weight="600">条件均数 '+f2(cmean)+'</text>';
+  // 回归直线（所有切片的条件均数）
+  svg2+=c.curve(x=>rho*(x/s1)*s2,-3.2,3.2,C_PUR,{w:2,dash:"6 4"});
+  svg2+='<text x="'+(c.w-100)+'" y="'+(c.Y(2.6))+'" font-size="11.5" fill="'+C_PUR+'">条件均数连线</text>';
+  wrap("svg-mvn2",svg2,W,H);
+
+  const info=$("m-shape");
+  if(info){
+    info.innerHTML="ρ = <b>"+f2(rho)+"</b>，密度峰值 = 1/(2πσ₁σ₂√(1−ρ²)) = <b>"+f4(peak)+"</b>"+
+      "<br>条件分布 X₂|x₁="+f1_(xs)+"：均数 = ρ·(x₁/σ₁)·σ₂ = <b>"+f2(cmean)+"</b>，标准差 = σ₂√(1−ρ²) = <b>"+f3(csd)+"</b>"+
+      "<br>注意条件标准差 <b>不随 x₁ 变化</b>——这就是「方差齐性」在多元正态中的含义，也是回归里残差同方差的来源。"+
+      "<br>ρ=0 时椭圆变成正圆、条件均数连线水平（无信息可借）；|ρ|→1 时椭圆压成细线，几乎可由 x₁ 精确预测 x₂。";
+  }
+}
+function drawLogit(){
+  const eta=+$("l-eta").value, e1=+$("l-e1").value, e0=+$("l-e0").value;
+  $("l-eta-v").textContent=f1_(eta);
+  const sig=x=>1/(1+Math.exp(-x));
+  const p=sig(eta);
+  $("l-p").textContent=f3(p);
+  $("l-odds").textContent=f3(Math.exp(eta));
+  const w=640,h=320,pad={l:46,r:16,t:12,b:38};
+  const c=chartSVG(w,h,pad,[-5,5],[0,1]);
+  const f=x=>sig(x);
+  let s='<line x1="'+c.X(-5)+'" y1="'+c.Y(0.5)+'" x2="'+c.X(5)+'" y2="'+c.Y(0.5)+'" stroke="'+C_GRAY+'" stroke-dasharray="5 4"/>';
+  s+='<path d="'+curvePath(c,f,-5,5,300)+'" fill="none" stroke="'+C_BLUE+'" stroke-width="2.5"/>';
+  // 当前点
+  s+='<circle cx="'+c.X(eta)+'" cy="'+c.Y(p)+'" r="5.5" fill="'+C_RED+'"/>';
+  s+='<line x1="'+c.X(eta)+'" y1="'+c.Y(p)+'" x2="'+c.X(eta)+'" y2="'+c.Y(0)+'" stroke="'+C_RED+'" stroke-dasharray="4 3"/>';
+  s+='<text x="'+c.X(eta)+'" y="'+(c.Y(0)+15)+'" text-anchor="middle" font-size="11.5" fill="'+C_RED+'" font-family="monospace">η='+f1_(eta)+'</text>';
+  s+=axes(c,10,5,f1_,f2,"η = logit(p) = ln(p/(1−p))","p");
+  wrap("svg-logit",s,w,h);
+  const p1=sig(e1),p0=sig(e0),odds1=Math.exp(e1),odds0=Math.exp(e0),OR=odds1/odds0;
+  $("l-e1-v").textContent=f1_(e1);$("l-e0-v").textContent=f1_(e0);
+  $("l-or").innerHTML="暴露组：p₁="+f3(p1)+"，odds₁="+f2(odds1)+"<br>非暴露组：p₀="+f3(p0)+"，odds₀="+f2(odds0)+
+    "<br><b>OR = odds₁/odds₀ = "+f2(OR)+"</b>（= e^(η₁−η₀) = e^Δη，只与 η 的差有关——这就是 logistic 回归系数 exp(β) 的含义）";
+}
+/* ===================== 原理 ===================== */
+function drawPrinc(){
+  const dist=$("pr-dist").value, tail=$("pr-tail").value;
+  let stat=+$("pr-stat").value, a=alphaOf("pr-alpha");
+  const isTwoSided=tail==="2";
+  // chi2/F: 滑块取 0-8 映射
+  const posOnly = dist==="chi2"||dist==="F";
+  let pdf,cdf,crit,p,lo,hi;
+  if(dist==="z"){ pdf=x=>normPdf(x,0,1); cdf=phi;
+    crit = isTwoSided? zQuant(1-a/2) : zQuant(1-a);
+    p = isTwoSided? 2*(1-phi(Math.abs(stat))) : 1-phi(stat);
+  } else if(dist==="t"){ pdf=x=>tPdf(x,10); cdf=x=>tCDF(x,10);
+    crit=quantile(x=>tCDF(x,10), isTwoSided?1-a/2:1-a,-40,40);
+    p=isTwoSided?2*(1-tCDF(Math.abs(stat),10)):1-tCDF(stat,10);
+  } else if(dist==="chi2"){ pdf=x=>chi2Pdf(x,1); cdf=x=>chi2CDF(x,1);
+    crit=quantile(x=>chi2CDF(x,1),1-a,0,200);
+    p=1-chi2CDF(stat,1);
+  } else { pdf=x=>fPdf(x,3,20); cdf=x=>fCDF(x,3,20);
+    crit=quantile(x=>fCDF(x,3,20),1-a,0,300);
+    p=1-fCDF(stat,3,20);
+  }
+  // 滑块范围随分布动态调整：z/t 为 -4~4，χ²/F 为 0~8
+  const sl=$("pr-stat");
+  const wantMin = posOnly? 0 : -4, wantMax = posOnly? 8 : 4;
+  if(+sl.min!==wantMin || +sl.max!==wantMax){
+    sl.min=wantMin; sl.max=wantMax;
+    if(posOnly && +sl.value<0) sl.value=Math.abs(+sl.value)||2;
+    if(!posOnly && +sl.value>4) sl.value=2;
+  }
+  if(posOnly && +sl.value<0){ sl.value=Math.abs(+sl.value); }
+  stat=+sl.value;
+  $("pr-stat-v").textContent=f2(stat);
+  const w=640,h=320,pad={l:46,r:16,t:12,b:38};
+  const xmin=posOnly?0:-4, xmax=posOnly?Math.max(8,crit*1.6):4;
+  let ymax=0; const N=400; for(let i=posOnly?1:0;i<=N;i++){ymax=Math.max(ymax,pdf(xmin+(xmax-xmin)*i/N));}
+  const c=chartSVG(w,h,pad,[xmin,xmax],[0,ymax*1.12]);
+  let s='';
+  // 拒绝域
+  const shade=(x0,x1,color,op)=>'<path d="'+areaPath(c,pdf,x0,x1,150)+'" fill="'+color+'" opacity="'+op+'"/>';
+  if(posOnly||!isTwoSided){ s+=shade(crit,xmax,C_RED,0.25); }
+  else { s+=shade(crit,xmax,C_RED,0.25)+shade(xmin,-crit,C_RED,0.25); }
+  // P 值区域（紫色）
+  if(posOnly){ s+=shade(stat,xmax,M_SKY,0.62); }
+  else if(!isTwoSided){ s+=shade(stat,xmax,M_SKY,0.62); }
+  else { s+=shade(Math.abs(stat),xmax,M_SKY,0.62)+shade(xmin,-Math.abs(stat),M_SKY,0.62); }
+  s+='<path d="'+curvePath(c,pdf,xmin+(posOnly?0.001:-xmax),xmax,320)+'" fill="none" stroke="'+C_BLUE+'" stroke-width="2.5"/>';
+  // 统计量竖线
+  s+='<line x1="'+c.X(stat)+'" y1="'+c.Y(0)+'" x2="'+c.X(stat)+'" y2="'+c.Y(ymax*1.12)+'" stroke="#3E7FB8" stroke-width="2"/>';
+  s+='<text class="mono" x="'+c.X(stat)+'" y="'+(pad.t-2)+'" text-anchor="middle" font-size="11.5" fill="#2E6E9E" font-weight="700">统计量 '+f2(stat)+'</text>';
+  // 界值
+  const critPts = posOnly? [crit] : (isTwoSided?[-crit,crit]:[crit]);
+  critPts.forEach(x=>{ s+='<line x1="'+c.X(x)+'" y1="'+c.Y(0)+'" x2="'+c.X(x)+'" y2="'+c.Y(ymax*1.12)+'" stroke="'+C_RED+'" stroke-dasharray="5 4"/>';
+    s+='<text x="'+c.X(x)+'" y="'+(c.Y(0)+26)+'" text-anchor="middle" font-size="11.5" fill="'+C_RED+'" font-family="monospace">'+f2(x)+'</text>'; });
+  s+=axes(c,8,4,f2,f3,"检验统计量","密度（H₀ 下）");
+  // 图内读数：P 值 vs α
+  s+='<text x="'+(w-22)+'" y="'+(pad.t+18)+'" text-anchor="end" font-size="13" fill="#2E6E9E" font-weight="700">P = '+f4(p)+'（浅蓝面积）</text>';
+  s+='<text x="'+(w-22)+'" y="'+(pad.t+40)+'" text-anchor="end" font-size="13" fill="'+C_RED+'" font-weight="700">α = '+a.toFixed(3)+'（红色面积）</text>';
+  s+='<text x="'+(w-22)+'" y="'+(pad.t+62)+'" text-anchor="end" font-size="13" font-weight="700" fill="'+(p<a?C_RED:C_GREEN)+'">'+(p<a?"P < α → 拒绝 H₀":"P ≥ α → 不拒绝 H₀")+'</text>';
+  wrap("svg-princ",s,w,h);
+  const rej=p<a;
+  const names={z:"z",t:"t(ν=10)",chi2:"χ²(ν=1)",F:"F(3,20)"};
+  const v=$("pr-verdict");
+  v.className="verdict "+(rej?"ok":"ns");
+  v.innerHTML=names[dist]+" = "+f2(stat)+"，P = "+f4(p)+"（浅蓝面积）"+(rej?" &lt; ":" ≥ ")+"α = "+a+"（红色面积）→ "+(rej?"拒绝 H₀：这么极端的结果在 H₀ 下是小概率事件。":"尚不能拒绝 H₀：当前结果在 H₀ 下并不罕见。");
+}
+/* ===================== α 与 β 的关系 ===================== */
+function drawAB(){
+  const a=+$("ab-alpha").value, delta=+$("ab-delta").value, n=+$("ab-n").value;
+  const tail=$("ab-tail").value;
+  $("ab-alpha-v").textContent=a.toFixed(3);
+  $("ab-delta-v").textContent=delta.toFixed(1);
+  $("ab-n-v").textContent=n;
+
+  const se = 1/Math.sqrt(n);              // 标准误（σ=1）
+  const mu0 = 0, mu1 = delta;             // H₁ 的均数 = 效应量 δ（以标准误为单位则不缩放，此处用原尺度）
+  const w=680,h=372,pad={l:50,r:22,t:78,b:46};
+  // 视窗：覆盖两条曲线
+  const xmin = Math.min(-4*se-0.2, mu1-4*se-0.2);
+  const xmax = Math.max( 4*se+0.2, mu1+4*se+0.2);
+  const peak0 = normPdf(0,0,se);
+  const yrMax = peak0*1.18;
+  const c = mkc(w,h,pad,[xmin,xmax],[0,yrMax]);
+  const f0 = x=>normPdf(x,mu0,se), f1=x=>normPdf(x,mu1,se);
+  let s = c.ax(6,4,f2,f3,"检验统计量（以 σ 为单位）","概率密度");
+
+  // 单双侧界值（在 H₀ 尺度上）
+  const zc = tail==="2" ? zQuant(1-a/2)*se : zQuant(1-a)*se;
+
+  // ---- 面积：拒绝域内的 α（H₀ 曲线右尾，红色） ----
+  if(tail==="2"){ s+=c.area(f0,xmin,-zc,C_RED,0.30); }
+  s+=c.area(f0,zc,xmax,C_RED,0.30);
+  // ---- β（H₁ 落在不拒绝域，糖果薄荷绿填充） ----
+  const power2 = 1-normCdf((zc-mu1)/se);
+  if(tail==="2"){ s+=c.area(f1,-zc,zc,M_MINT,0.82); }
+  else { s+=c.area(f1,xmin,zc,M_MINT,0.82); }
+  // ---- 效能 1-β 不填色：仅用细描边示意区间 ----
+
+  // ---- 曲线：H₀ 蓝色粗实线；H₁ 蓝色粗虚线（同色系，靠线型区分） ----
+  s+=c.curve(f0,xmin,xmax,C_BLUE,{w:2.8});
+  s+=c.curve(f1,xmin,xmax,M_H1,{w:2.6,dash:"10 6"});
+
+  // ---- 界值线 ----
+  s+=c.vline(zc,"#8B3A47",true,f2(zc));
+  if(tail==="2") s+=c.vline(-zc,"#8B3A47",true,f2(-zc));
+
+  // ---- 曲线标签：主标签 + 下方具体假设内容 ----
+  const isTwo = (tail==="2");
+  const h0sub = isTwo ? "H₀: μ = μ₀（两组相等，δ = 0）" : "H₀: μ ≤ μ₀（试验组不优于对照）";
+  const h1sub = isTwo ? "H₁: μ ≠ μ₀（δ = "+delta.toFixed(1)+"，有差异）" : "H₁: μ > μ₀（δ = "+delta.toFixed(1)+"，确有优势）";
+  // H₀：主标签贴峰顶，内容两行放在略下方（避开曲线）
+  s+='<text x="'+c.X(mu0)+'" y="'+(c.Y(peak0)-22)+'" text-anchor="middle" font-size="13.5" font-weight="700" fill="'+C_BLUE+'">H₀（原假设）</text>';
+  s+='<text x="'+c.X(mu0)+'" y="'+(c.Y(peak0)-10)+'" text-anchor="middle" font-size="11.5" fill="'+C_BLUE+'" opacity="0.92">'+h0sub+'</text>';
+  const peak1=normPdf(mu1,mu1,se);
+  const showH1 = c.X(mu1)>pad.l+40 && c.X(mu1)<w-pad.r-40;
+  // 两峰顶水平距离过近时，H₁ 标注右移错行，避免与 H₀ 文字重叠
+  const close = (c.X(mu1)-c.X(mu0)) < 170;
+  if(showH1){
+    const ax1 = close ? c.X(mu1)+16 : c.X(mu1);
+    const anc1 = close ? "start" : "middle";
+    s+='<text x="'+ax1+'" y="'+(c.Y(peak1)-54)+'" text-anchor="'+anc1+'" font-size="13.5" font-weight="700" fill="'+M_H1+'">H₁（备择假设）</text>';
+    s+='<text x="'+ax1+'" y="'+(c.Y(peak1)-38)+'" text-anchor="'+anc1+'" font-size="11.5" fill="'+M_H1+'" opacity="0.92">'+h1sub+'</text>';
+  }else{
+    // 峰顶太靠边：改为在右上角用图例方式标注两条曲线
+    s+='<text x="'+(w-pad.r-6)+'" y="'+(pad.t+58)+'" text-anchor="end" font-size="12" font-weight="700" fill="'+M_H1+'">H₁: μ '+(isTwo?"≠":">")+' μ₀（δ = '+delta.toFixed(1)+'）</text>';
+  }
+
+  // ---- 面积标注 ----
+  if(tail==="1"||true){
+    const ax = zc + (xmax-zc)*0.42;
+    s+='<text x="'+c.X(ax)+'" y="'+(pad.t+16)+'" text-anchor="middle" font-size="13" font-weight="700" fill="'+C_RED+'">α='+a.toFixed(3)+'</text>';
+  }
+  // β 标注（放在 H1 曲线下方、界值左侧）
+  const bx = tail==="2" ? Math.min(mu1, zc)/2 : (xmin+zc)/2 + (zc-xmin)*0.10;
+  const betaVal = tail==="2" ? (normCdf((zc-mu1)/se)-normCdf((-zc-mu1)/se)) : normCdf((zc-mu1)/se);
+  s+='<text x="'+c.X(Math.max(xmin+ (xmax-xmin)*0.06, bx))+'" y="'+(c.Y(peak1*0.34))+'" text-anchor="middle" font-size="13.5" font-weight="700" fill="#1F8A5B">β='+betaVal.toFixed(3)+'</text>';
+  // 效能标注
+  const px = zc + (xmax-zc)*0.55;
+  s+='<text x="'+c.X(Math.min(px,xmax-(xmax-xmin)*0.10))+'" y="'+(c.Y(peak1*0.55))+'" text-anchor="middle" font-size="13" font-weight="700" fill="'+C_GREEN+'">1−β='+power2.toFixed(3)+'</text>';
+
+  wrap("svg-ab",s,w,h);
+
+  // ---- 结果面板 ----
+  const power = power2;
+  const info=$("ab-result");
+  const need = Math.pow((zQuant(1-a) + zQuant(0.8))/Math.max(delta,0.01),2);
+  info.innerHTML =
+    "<h3>当前参数下的数值</h3>"+
+    "<div class='note' style='font-size:14px;line-height:2'>"+
+    "标准误 SE = σ/√n = 1/√"+n+" = <b>"+f3(se)+"</b>（σ 固定为 1）<br>"+
+    "界值 = "+f3(zc)+"（σ 单位下相当于 z="+f2(tail==="2"?zQuant(1-a/2):zQuant(1-a))+"）<br>"+
+    "α = <b style='color:#94354f'>"+a.toFixed(3)+"</b>　β = <b style='color:#1F8A5B'>"+betaVal.toFixed(3)+"</b>　效能 1−β = <b style='color:#1e7a4f'>"+power.toFixed(3)+"</b><br>"+
+    "<span style='color:#455d72'>若把效能目标定为 0.80，本例所需 n ≈ <b>"+Math.ceil(need)+"</b>（当前 n="+n+"）</span>"+
+    "</div>"+
+    "<div class='verdict "+(power>=0.8?"ns":"ok")+"' style='margin-top:10px;font-weight:600'>"+
+    (power>=0.8
+      ? "效能 "+(power*100).toFixed(0)+"%，≥ 80%（β="+betaVal.toFixed(3)+"）。若真实差异确实存在，本设计有较大概率发现它。"
+      : "效能仅 "+(power*100).toFixed(0)+"%，&lt; 80%（β="+betaVal.toFixed(3)+" 偏大）。若真实差异存在，约有 "+(betaVal*100).toFixed(0)+"% 的机会漏掉它——「无统计学意义」可能是效能不足，而非「无效」。")+
+    "</div>";
+}
+function normCdf(x){ return phi(x); }
+
+/* ===================== 标签页 ===================== */
+function showTab(t){
+  document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));
+  ["norm","t","chi2","F","binom","pois","mvn","logit","princ"].forEach(x=>$("t-"+x).hidden=(x!==t));
+  if(t==="norm")drawNorm(); if(t==="t")drawT(); if(t==="chi2")drawChi(); if(t==="F")drawF();
+  if(t==="binom")drawBinom(); if(t==="pois")drawPois(); if(t==="mvn")drawMvn();
+  if(t==="logit")drawLogit(); if(t==="princ"){drawPrinc();drawAB();}
+}
+document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",()=>showTab(b.dataset.t)));
+// 事件绑定
+["n-mu","n-sd","tail-norm"].forEach(x=>$(x).addEventListener("input",drawNorm));
+bindAlpha("alpha-norm-s","alpha-norm",drawNorm);
+["t-df","tail-t"].forEach(x=>$(x).addEventListener("input",drawT));
+bindAlpha("alpha-t-s","alpha-t",drawT);
+["c-df"].forEach(x=>$(x).addEventListener("input",drawChi));
+bindAlpha("alpha-c-s","alpha-c",drawChi);
+["f-df1","f-df2"].forEach(x=>$(x).addEventListener("input",drawF));
+bindAlpha("alpha-f-s","alpha-f",drawF);
+["b-n","b-p"].forEach(x=>$(x).addEventListener("input",drawBinom));
+bindAlpha("alpha-b-s","alpha-b",drawBinom);
+["p-lam"].forEach(x=>$(x).addEventListener("input",drawPois));
+bindAlpha("alpha-p-s","alpha-p",drawPois);
+["m-rho","m-x1","m-s1","m-s2"].forEach(x=>$(x).addEventListener("input",drawMvn));
+["l-eta","l-e1","l-e0"].forEach(x=>$(x).addEventListener("input",drawLogit));
+["pr-dist","pr-tail"].forEach(x=>$(x).addEventListener("change",drawPrinc));
+$("pr-stat").addEventListener("input",()=>{ $("pr-stat-v").textContent=f2(+$("pr-stat").value); drawPrinc(); });
+["ab-alpha","ab-delta","ab-n"].forEach(x=>$(x).addEventListener("input",drawAB));
+$("ab-tail").addEventListener("change",drawAB);
+bindAlpha("pr-alpha-s","pr-alpha",()=>{drawPrinc();});
+// 启动
+drawNorm();
+</script>
+</body>
+</html>

@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="生存分析随机练习：生存曲线估计、Log-rank检验、Cox比例风险回归与综合方法选择，采用苏格拉底式提问逐步引导。">
+<meta name="theme-color" content="#17699b">
+<title>生存分析 · 学生练习入口</title>
+<style>
+:root{--blue:#17699b;--deep:#14577f;--pale:#eaf2fa;--ink:#243e54;--muted:#455d72;--line:#c5d3df;--purple:#6b55a2;--purple-pale:#f0ecf8;--wrong:#94354f;--wrong-pale:#fff1f5;--right:#1e7a4f;--right-pale:#eef8f2;--bg:#f4f7fb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.75 "PingFang SC","Microsoft YaHei","Noto Sans CJK SC",system-ui,sans-serif}
+h1,h2,h3,p{margin:0}
+button,input,select{font:inherit}
+button,select,summary{cursor:pointer}
+button:disabled{opacity:.48;cursor:default}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #70a4ca;outline-offset:3px}
+[hidden]{display:none!important}
+.masthead{background:linear-gradient(115deg,#17699b,#155d89);color:#fff}
+.topbar{display:flex;justify-content:space-between;gap:15px;align-items:center;max-width:1300px;margin:auto;padding:12px 28px;border-bottom:1px solid #ffffff35}
+.brand{font-size:15px;font-weight:600;letter-spacing:.3px}
+.brand-symbol{font:italic 27px Georgia,serif;margin-right:9px;vertical-align:-2px}
+.topbar button{border:1px solid #ffffff70;background:#ffffff12;color:#fff;padding:6px 13px;border-radius:7px;font-size:14px}
+.hero{padding:22px 20px 26px;text-align:center}
+.hero .eyebrow{font-size:12px;letter-spacing:2px;color:#eef7ff}
+.hero h1{font-size:36px;line-height:1.4;margin:5px 0 8px;font-weight:650}
+.hero p{font-size:16px;color:#f2f8ff}
+.hero .pill{display:inline-block;border:1px solid #ffffff65;border-radius:25px;padding:2px 14px;font-size:13px;margin-top:12px;margin-right:6px}
+.shell{max-width:1300px;margin:auto;padding:25px 28px 28px}
+.session-bar{display:flex;justify-content:space-between;align-items:center;gap:18px;background:white;border:1px solid var(--line);border-radius:12px;padding:15px 18px;margin-bottom:20px;box-shadow:0 4px 18px #163b5a05}
+.code-group{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.code-group label{font-size:14px;font-weight:600}
+.code-group input{width:150px;min-width:0;border:1px solid #aebfd0;border-radius:6px;padding:7px 10px;color:var(--deep);font-size:15px}
+.secondary-button,.text-button{font-size:14px;border-radius:6px;padding:7px 11px;border:1px solid #b5c9da;background:#eef5fb;color:var(--deep);min-height:39px}
+.secondary-button:hover{background:#e0edf8}
+.text-button{border-color:transparent;background:transparent}
+.new-button{background:var(--blue);color:#fff;border:1px solid var(--blue);border-radius:7px;font-size:14px;padding:8px 16px;min-height:41px;white-space:nowrap}
+.new-button:hover{background:var(--deep)}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:22px;box-shadow:0 4px 18px #163b5a05}
+.card h2{font-size:21px;margin-bottom:6px}
+.card .sub{color:var(--muted);font-size:14.5px;margin-bottom:14px}
+.tag{display:inline-block;font-size:12.5px;border-radius:20px;padding:2px 12px;margin-right:8px;border:1px solid var(--line);color:var(--deep);background:var(--pale)}
+.tag.purple{background:var(--purple-pale);border-color:#d5cbee;color:var(--purple)}
+.alpha{font-size:13px;color:var(--muted)}
+.steps{font-size:13.5px;color:var(--muted);letter-spacing:.5px;margin-bottom:10px}
+.case-box{background:var(--pale);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:16px}
+.case-box h3{font-size:16px;margin-bottom:6px}
+table.data{border-collapse:collapse;width:100%;font-size:14px;margin:10px 0}
+table.data th,table.data td{border:1px solid var(--line);padding:5px 10px;text-align:center}
+table.data th{background:#dceaf5;color:var(--deep);font-weight:600}
+.q{margin:14px 0;padding:14px 16px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.q .qtitle{font-weight:600;margin-bottom:8px}
+.q label.opt{display:flex;gap:8px;align-items:flex-start;padding:6px 10px;border:1px solid transparent;border-radius:8px;cursor:pointer;font-size:15px}
+.q label.opt:hover{background:var(--pale)}
+.q input{margin-top:5px}
+.socratic{margin-top:10px;border:1px dashed #9fbdd4;border-radius:10px;background:var(--purple-pale);padding:12px 14px}
+.socratic .s-title{font-weight:600;color:var(--purple);font-size:14px}
+.socratic details{margin-top:8px}
+.socratic summary{font-size:14px;color:var(--purple);font-weight:600}
+.socratic p{font-size:14px;color:#4a3f6e;margin-top:6px}
+.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px}
+.feedback{margin-top:14px;border-radius:10px;padding:12px 16px;font-size:15px}
+.feedback.ok{background:var(--right-pale);border:1px solid #9fd3b6;color:var(--right)}
+.feedback.bad{background:var(--wrong-pale);border:1px solid #e3b6c4;color:var(--wrong)}
+.feedback .explain{margin-top:8px;color:var(--ink);font-size:14.5px;border-top:1px dashed #c5d3df;padding-top:8px}
+.num-input{width:130px;border:1px solid #aebfd0;border-radius:6px;padding:6px 9px;font-size:15px}
+select.method{border:1px solid #aebfd0;border-radius:6px;padding:7px 10px;font-size:15px;color:var(--deep);background:#fff}
+.footer{max-width:1300px;margin:auto;padding:8px 28px 40px;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:14px;color:var(--muted)}
+.footer a{color:var(--blue);text-decoration:none;border-bottom:1px dotted var(--blue)}
+.km-note{font-size:13.5px;color:var(--muted);margin-top:6px}
+.km-svg{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px;margin-top:8px}
+.legend{font-size:13px;display:flex;gap:18px;margin-top:4px}
+.legend span b{display:inline-block;width:22px;height:3px;vertical-align:middle;margin-right:5px;border-radius:2px}
+.badge{font-size:12px;border-radius:20px;padding:1px 10px;margin-left:8px;vertical-align:2px}
+.badge.done{background:var(--right-pale);color:var(--right);border:1px solid #9fd3b6}
+.badge.todo{background:var(--pale);color:var(--muted);border:1px solid var(--line)}
+@media (max-width:760px){.session-bar{flex-direction:column;align-items:stretch}.hero h1{font-size:28px}}
+
+/* ===== 楷体署名 ===== */
+.dept-sign{
+  font-family: "Kaiti SC","STKaiti","KaiTi","楷体","KaiTi_GB2312",serif;
+  letter-spacing: 1px;
+}
+.masthead .dept-sign-top{
+  display:block;
+  margin-top:6px;
+  font-size:13.5px;
+  color:#dcecfa;
+  font-weight:500;
+}
+.footer-sign{
+  font-family: "Kaiti SC","STKaiti","KaiTi","楷体","KaiTi_GB2312",serif;
+  font-size:14.5px;
+  color:#14577f;
+  letter-spacing:1.2px;
+  font-weight:600;
+  text-align:center;
+  width:100%;
+  padding-top:14px;
+  margin-top:6px;
+  border-top:1px solid #dbe6ef;
+}
+</style>
+</head>
+<body>
+<header class="masthead">
+  <div class="topbar">
+    <div class="brand"><span class="brand-symbol">S</span>生存分析 · 医学统计学 · 随机练习课堂<span class="dept-sign dept-sign-top">中南大学 湘雅公共卫生学院 流行病与卫生统计学系</span></div>
+    <button type="button" onclick="resetAll()">重新开始</button>
+  </div>
+  <div class="hero">
+    <div class="eyebrow">读设计 · 估生存 · 辨模型</div>
+    <h1>生存分析互动课堂</h1>
+    <p>从生存曲线到 Cox 回归，在提问与追问中想清楚「为什么用这个方法」。</p>
+    <span class="pill">前置知识：基本统计方法 · 多元线性回归 · logistic 回归</span>
+    <span class="pill">α = 0.05</span>
+  </div>
+</header>
+
+<main class="shell">
+  <div class="session-bar">
+    <div class="code-group" id="loginGroup">
+      <label for="cls">班级</label><input id="cls" placeholder="如 临床2401">
+      <label for="sid">学号</label><input id="sid" placeholder="如 2024010123">
+      <label for="name">姓名</label><input id="name" placeholder="姓名">
+      <button class="new-button" id="enterBtn" onclick="enter()">进入练习</button>
+    </div>
+    <div id="sessionInfo" hidden>
+      <div style="font-size:14.5px">当前登录：<b id="whoami"></b>
+        <button class="text-button" onclick="switchAccount()">切换账号</button></div>
+    </div>
+  </div>
+
+  <div id="practice" hidden>
+    <div class="session-bar" style="margin-bottom:22px">
+      <div style="font-size:14.5px;color:var(--muted)">题目由系统随机分配，「换一套随机题」可重新抽取；作答结果保存在本机。</div>
+      <button class="secondary-button" onclick="reroll()">换一套随机题</button>
+    </div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
+      <span class="tag">01 生存曲线与 Log-rank 检验 <b id="b1" class="badge todo">待作答</b></span>
+      <span class="tag">02 Cox 比例风险回归 <b id="b2" class="badge todo">待作答</b></span>
+      <span class="tag purple">03 综合分析 · 方法选择与追问 <b id="b3" class="badge todo">待作答</b></span>
+    </div>
+
+    <!-- ================= 模块01 ================= -->
+    <section class="card">
+      <h2><span style="color:var(--blue)">01</span> 生存曲线与 Log-rank 检验</h2>
+      <div class="sub">根据终点事件与删失的安排，估计生存率并比较两条生存曲线。<span class="alpha">α = 0.05</span></div>
+      <div class="steps">① 阅读案例与提问　② 计算（或读取）关键量并作答　③ 提交后查看判题与解析</div>
+      <div class="case-box" id="case1box"></div>
+
+      <div class="q">
+        <div class="qtitle">1. 中位生存时间</div>
+        <p style="font-size:15px">请分别给出两组的中位生存时间（月，保留 1 位小数；若曲线未降到 0.5 以下，填「大于观察期」对应选项）。</p>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-top:6px">
+          <label>试验组 <input class="num-input" id="m1" type="number" step="0.1" min="0"></label>
+          <label>对照组 <input class="num-input" id="m2" type="number" step="0.1" min="0"></label>
+          <select id="mNA" class="method">
+            <option value="">——两组均有中位生存时间——</option>
+            <option value="a">试验组未达、对照组未达</option>
+            <option value="b">试验组未达、对照组已达到</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="q">
+        <div class="qtitle">2. 组间比较</div>
+        <p style="font-size:15px">比较两组生存曲线差异，应选用的方法及结论是（α = 0.05）？</p>
+        <select id="q2" class="method" style="width:100%;max-width:640px">
+          <option value="">——选择方法与结论——</option>
+          <option value="lr_sig">Log-rank 检验：差异有统计学意义</option>
+          <option value="lr_ns">Log-rank 检验：尚无统计学证据支持差异</option>
+          <option value="t_sig">两独立样本 t 检验：差异有统计学意义</option>
+          <option value="chi2_sig">四格表 χ² 检验：差异有统计学意义</option>
+        </select>
+      </div>
+
+      <div class="socratic">
+        <div class="s-title">继续想一想（先自己想，再点开对照）</div>
+        <details><summary>追问 1：为什么这里不能用两独立样本 t 检验比较「生存时间」？</summary>
+          <p>因为生存时间往往严重偏态，更关键的是存在<b>删失</b>——部分研究对象观察期内未发生终点事件，其真实生存时间只知「大于记录值」。t 检验无法利用删失信息，简单删失或丢弃都会产生偏倚。</p></details>
+        <details><summary>追问 2：直接比较两组的「率」（如 2 年死亡率）用 χ² 检验，为什么还不够？</summary>
+          <p>χ² 只利用了某个固定时点的是/否结局，丢掉了「何时发生」的信息，也丢弃了其他时点的信息；且若有删失，分母并不清楚。生存分析同时利用发生时间与删失信息。</p></details>
+        <details><summary>追问 3：本例的删失是哪种类型？对结果有何影响？</summary>
+          <p>多为<b>右侧删失</b>（失访或研究结束时仍存活）。Kaplan-Meier 法在每个人发生事件的时点用条件概率连乘估计生存率，删失个体只在「仍处于风险集」期间提供信息，直到其退出。</p></details>
+        <details><summary>追问 4：Log-rank 检验的检验统计量在构造上像什么？它对哪类差异敏感？</summary>
+          <p>它在每个事件发生时点构造 2×2 表（组别 × 是否事件），对各时点的「观察减理论」求和，形式上与分层 χ²（Mantel-Haenszel）一致；它对两组风险的<b>整体</b>差异敏感，且隐含比例风险假定——若两曲线交叉，解释需谨慎。</p></details>
+      </div>
+
+      <div class="actions">
+        <button class="new-button" onclick="submit1()">提交答案，查看对错</button>
+        <button class="secondary-button" onclick="drawKMSvg()">显示生存曲线</button>
+      </div>
+      <div id="fb1" class="feedback" hidden></div>
+      <div class="km-svg" id="kmSvg" hidden></div>
+    </section>
+
+    <!-- ================= 模块02 ================= -->
+    <section class="card">
+      <h2><span style="color:var(--blue)">02</span> Cox 比例风险回归</h2>
+      <div class="sub">阅读软件输出的 Cox 回归结果，选出有统计学意义的变量、解释风险比并判断模型适用性。</div>
+      <div class="steps">① 阅读输出表　② 逐题作答　③ 提交后查看判题与解析</div>
+      <div class="case-box" id="case2box"></div>
+
+      <div class="q">
+        <div class="qtitle">1. 变量筛选</div>
+        <p style="font-size:15px">在 α = 0.05 水准下，哪些变量与生存时间有统计学意义（多选）？</p>
+        <div id="q31opts"></div>
+      </div>
+
+      <div class="q">
+        <div class="qtitle">2. 风险比解读</div>
+        <p style="font-size:15px">对主效应变量（治疗方案/暴露），其 HR 的正确解读是：</p>
+        <select id="q32" class="method" style="width:100%;max-width:680px">
+          <option value="">——选择解读——</option>
+          <option value="a">试验组死亡风险约为对照组的 HR 倍，校正了模型中其他变量后</option>
+          <option value="b">试验组生存时间是对照组的 HR 倍</option>
+          <option value="c">试验组发病率的比值（相对危险度 RR）为 HR 倍</option>
+          <option value="d">HR 就是优势比 OR，两者在本例完全等价</option>
+        </select>
+      </div>
+
+      <div class="q">
+        <div class="qtitle">3. 模型适用性</div>
+        <p style="font-size:15px">关于 Cox 模型的比例风险（PH）假定，下列说法正确的是：</p>
+        <select id="q33" class="method" style="width:100%;max-width:680px">
+          <option value="">——选择答案——</option>
+          <option value="a">可通过 log(-log 生存率) 平行性、Schoenfeld 残差或时间项检验；若不满足可加时间交互项或分层</option>
+          <option value="b">PH 假定要求两组生存曲线完全平行且不相交，任何交叉都意味着模型完全不能用</option>
+          <option value="c">Cox 模型对 PH 假定不作要求，可直接使用</option>
+          <option value="d">只要 log-rank 检验有统计学意义，PH 假定必然成立</option>
+        </select>
+      </div>
+
+      <div class="socratic">
+        <div class="s-title">继续想一想</div>
+        <details><summary>追问 1：你已经学过多元线性回归和 logistic 回归——为什么生存分析不直接用它们？</summary>
+          <p>线性回归处理不了删失且要求结局近似正态；logistic 回归只看固定随访期内的「是否发生」，丢掉发生时间，随访期长短还会人为改变结果。Cox 模型以风险函数 h(t) 为核心，同时利用「是否 + 何时 + 删失」。</p></details>
+        <details><summary>追问 2：Cox 模型是「半参数」模型，「半」在哪里？</summary>
+          <p>它不对基线风险 h₀(t) 的分布形状作参数假定（这部分任意，随时间自由变化），只对协变量的效应假定乘法、对数线性：<b>h(t) = h₀(t)·exp(β₁x₁+…)</b>，β 部分是参数化的。</p></details>
+          <details><summary>追问 3：HR 大于 1、小于 1 分别意味着什么？它和 logistic 回归的 OR 有何联系与区别？</summary>
+          <p>HR&gt;1 表示该变量每增加一个单位，瞬时死亡（事件）风险升高；HR&lt;1 则是保护因素。OR 关注累积「 odds」，HR 关注「瞬时风险」；当事件率很低且随访期相同时，二者数值上会接近，但含义不同。</p></details>
+      </div>
+
+      <div class="actions">
+        <button class="new-button" onclick="submit2()">提交答案，查看对错</button>
+      </div>
+      <div id="fb2" class="feedback" hidden></div>
+    </section>
+
+    <!-- ================= 模块03 综合分析 ================= -->
+    <section class="card">
+      <h2><span style="color:var(--purple)">03</span> 综合分析 · 方法选择与追问</h2>
+      <div class="sub">一个研究问题，三种回归模型：多元线性回归、logistic 回归、Cox 回归，如何选、为什么选？请按顺序回答，回答正确后自动解锁下一问。</div>
+      <div class="case-box" id="case3box"></div>
+      <div id="socraticChain"></div>
+      <div class="actions" id="chainActions" hidden>
+        <div class="feedback ok" style="margin-top:0">🎉 追问链全部通过！你已经能独立完成「结局类型 → 模型选择 → 假定核查」的完整推理。</div>
+      </div>
+    </section>
+
+    <div class="footer">
+      <span>上一章：卡方与非参数检验互动课堂</span>
+      <span>生存分析 · Kaplan-Meier / Log-rank / Cox proportional hazards model</span>
+      <div class="dept-sign footer-sign">中南大学 湘雅公共卫生学院 流行病与卫生统计学系</div>
+    </div>
+  </div>
+</main>
+
+<noscript>请在启用 JavaScript 的浏览器中打开本页，以生成题目并完成计算。</noscript>
+<script>
+/* ==================== 数据：随机案例池 ==================== */
+// 模块01案例：两组随访数据 [time, event(1=死亡/事件,0=删失)]
+const CASES1 = [
+ {
+  title:"案例 A · 两种化疗方案的生存比较",
+  text:"某肿瘤医院将 20 例某期恶性肿瘤患者随机分为两组：试验组采用新辅助化疗方案，对照组采用标准方案，随访至死亡或研究结束（24 个月末删失），终点为全因死亡。",
+  g1:[[3,1],[6,1],[6,1],[9,1],[12,0],[12,1],[14,1],[18,0],[21,1],[24,0]],
+  g2:[[2,1],[3,1],[5,1],[7,1],[8,1],[10,1],[12,1],[15,1],[18,1],[20,1]],
+  median1:"14.0", median2:"8.0", na:"", answer:"lr_ns"
+ },
+ {
+  title:"案例 B · 两种支架术后生存比较",
+  text:"心内科比较两种支架治疗 20 例患者的生存情况，终点为心源性死亡，随访 30 个月，失访与随访期末均按删失处理。",
+  g1:[[4,1],[8,1],[12,1],[16,1],[20,0],[20,0],[24,1],[24,0],[28,1],[30,0]],
+  g2:[[2,1],[4,1],[4,1],[6,1],[9,1],[11,1],[14,0],[14,1],[18,1],[22,1]],
+  median1:"24.0", median2:"11.0", na:"", answer:"lr_sig"
+ },
+ {
+  title:"案例 C · 早期与晚期起始治疗时机比较",
+  text:"20 例慢性肾病患者按治疗时机分为早期组与对照组，观察终点为进入透析或死亡（复合终点），随访 36 个月。",
+  g1:[[10,1],[14,1],[18,0],[22,1],[26,1],[30,0],[30,0],[34,1],[36,0],[36,0]],
+  g2:[[6,1],[9,1],[12,1],[15,0],[15,1],[18,1],[21,1],[24,1],[27,1],[30,1]],
+  median1:"34.0", median2:"18.0", na:"", answer:"lr_sig"
+ }
+];
+
+// 模块02案例：Cox 回归输出（软件输出样式）
+const CASES2 = [
+ {
+  title:"案例 A · 新辅助化疗与预后",
+  ctx:"对 120 例某癌术后患者随访 5 年，以 Cox 比例风险回归分析预后因素。结果如下（β 为偏回归系数，SE 为标准误）：",
+  rows:[
+   ["变量","β","SE","Wald χ²","P","HR"],
+   ["治疗方案（试验组=1）","-0.693","0.250","7.68","0.006","0.50"],
+   ["淋巴结阳性数（个）","0.231","0.080","8.34","0.004","1.26"],
+   ["年龄（岁）","0.015","0.013","1.33","0.249","1.02"],
+   ["肿瘤分级（III vs I）","0.405","0.190","4.55","0.033","1.50"]
+  ],
+  sig:["treat","nodes","grade"]
+ },
+ {
+  title:"案例 B · 高血压患者心血管死亡危险因素",
+  ctx:"对 200 例高血压患者随访 8 年，研究心血管死亡的影响因素，Cox 回归输出如下：",
+  rows:[
+   ["变量","β","SE","Wald χ²","P","HR"],
+   ["他汀治疗（是=1）","-0.562","0.220","6.53","0.011","0.57"],
+   ["收缩压（每 10 mmHg）","0.182","0.090","4.09","0.043","1.20"],
+   ["性别（男=1）","0.150","0.190","0.62","0.430","1.16"],
+   ["糖尿病（是=1）","0.642","0.240","7.16","0.007","1.90"]
+  ],
+  sig:["statin","sbp","dm"]
+ },
+ {
+  title:"案例 C · ICU 重症患者死亡危险因素",
+  ctx:"对 150 例 ICU 重症患者随访至出院或 90 天，Cox 回归输出如下：",
+  rows:[
+   ["变量","β","SE","Wald χ²","P","HR"],
+   ["早期抗感染治疗（是=1）","-0.777","0.260","8.93","0.003","0.46"],
+   ["APACHE II 评分（每 5 分）","0.245","0.100","6.00","0.014","1.28"],
+   ["机械通气（是=1）","0.531","0.250","4.51","0.034","1.70"],
+   ["血型","0.050","0.180","0.08","0.784","1.05"]
+  ],
+  sig:["anti","apache","vent"]
+ }
+];
+const SIG_LABELS = {
+ treat:"治疗方案（试验组=1）", nodes:"淋巴结阳性数（个）", age:"年龄（岁）", grade:"肿瘤分级（III vs I）",
+ statin:"他汀治疗（是=1）", sbp:"收缩压（每 10 mmHg）", sex:"性别（男=1）", dm:"糖尿病（是=1）",
+ anti:"早期抗感染治疗（是=1）", apache:"APACHE II 评分（每 5 分）", vent:"机械通气（是=1）", blood:"血型"
+};
+
+// 模块03 综合分析：三个场景
+const CASES3 = [
+ {
+  title:"综合案例 A · 三种结局，三次选择",
+  ctx:"同一批 300 例 2 型糖尿病患者的一项队列研究，记录了基线 BMI、糖化血红蛋白（HbA1c）、吸烟等指标，随访 5 年。研究者关心三个问题：① HbA1c 对随访末「颈动脉内膜中层厚度（CIMT，连续型）」的影响；② HbA1c 对「5 年内是否发生糖尿病肾病（是/否）」的影响；③ HbA1c 对「从入组到发生糖尿病肾病的时间」的影响（期间有失访）。请依次回答下面的问题。"
+ },
+ {
+  title:"综合案例 B · 药物疗效的三张面孔",
+  ctx:"某新药临床试验纳入 240 例慢性心衰患者，记录基线 LVEF（%）、NT-proBNP（连续）、是否合用 β 受体阻滞剂，随访 3 年。三个研究问题：① 药物对 3 年末「6 分钟步行距离（连续型）」的影响；② 药物对「3 年内是否再入院（是/否）」的影响；③ 药物对「再入院发生时间」的影响（含删失）。请依次回答下面的问题。"
+ },
+ {
+  title:"综合案例 C · 职业暴露队列",
+  ctx:"某厂 400 名工人随访 10 年，基线测量累积粉尘暴露量（mg·年/m³）、吸烟包年数。研究问题：① 暴露量对「随访末肺功能 FEV1（连续型）」的影响；② 暴露量对「10 年内是否出现尘肺样影像学改变（是/否）」的影响；③ 暴露量对「出现影像学改变所需时间」的影响（有失访）。请依次回答下面的问题。"
+ }
+];
+const CHAIN = [
+ {
+  q:"第一问：结局是【随访末测得的连续型指标】，研究其影响因素，应选哪个模型？",
+  opts:{a:"多元线性回归（校正其他协变量）",b:"logistic 回归",c:"Cox 比例风险回归",d:"卡方检验"},
+  ans:"a",
+  why:"连续型结局 + 欲校正多个协变量 → 多元线性回归；β 表示其他变量固定时，该变量每增加 1 单位结局的 平均变化量。",
+  poke:"想一想：如果结局严重偏态（如 NT-proBNP），直接线性回归会有什么问题？（提示：变量变换）"
+ },
+ {
+  q:"第二问：结局是【固定随访期内是否发生事件（二分类）】，应选哪个模型？",
+  opts:{a:"多元线性回归",b:"logistic 回归（报告 OR 及其 CI）",c:"Cox 比例风险回归",d:"Log-rank 检验"},
+  ans:"b",
+  why:"固定随访期 + 二分类结局 + 校正协变量 → logistic 回归；OR 表示校正其他因素后，暴露组与对照事件优势之比。",
+  poke:"追问：如果随访期改为「各人实际随访时间不同」，这样定义的『是否发生』还公平吗？"
+ },
+ {
+  q:"第三问：结局是【发生时间且存在删失】，比较两组并校正协变量，应选哪个模型？",
+  opts:{a:"多元线性回归",b:"logistic 回归",c:"Cox 比例风险回归（报告 HR 及其 CI）",d:"两独立样本 t 检验"},
+  ans:"c",
+  why:"时间-事件数据 + 删失 + 校正协变量 → Cox 回归；HR 表示校正其他因素后的瞬时风险之比。",
+  poke:"追问：此时若仍用 logistic 回归，会怎样混淆「随访时间」与「风险」？（提示：失访多的人被误记为『未发生』）"
+ },
+ {
+  q:"第四问（收束）：以上三个模型的共同点是「校正混杂」，它们对【时间】这一维度的处理有何本质不同？",
+  opts:{a:"三个模型都显式建模了时间",b:"线性回归不看时间，logistic 只看固定时点是否发生，Cox 把时间纳入风险函数并处理删失",c:"logistic 回归也能处理删失",d:"时间只影响样本量，不影响模型选择"},
+  ans:"b",
+  why:"这正是三者的分水岭：结局的测量方式（连续值 / 固定期是否 / 何时发生+删失）决定模型选择。",
+  poke:"最后自问：拿到一个新研究，你判断模型的三步是什么？——①结局类型 ②有无删失与时间信息 ③待校正的协变量与假定（线性/对数线性、PH）。"
+ }
+];
+
+/* ==================== 状态 ==================== */
+let S = {cls:"", sid:"", name:"", r1:0, r2:0, r3:0, stage3:0, done1:false, done2:false, chainState:[]};
+const $ = id => document.getElementById(id);
+function save(){ localStorage.setItem("survival_practice", JSON.stringify(S)); }
+function load(){
+  try{ const d = JSON.parse(localStorage.getItem("survival_practice")); if(d && d.sid) S = Object.assign(S, d); }catch(e){}
+}
+
+/* ==================== 登录 ==================== */
+function enter(){
+  const c=$("cls").value.trim(), s=$("sid").value.trim(), n=$("name").value.trim();
+  if(!c||!s||!n){ alert("请填写班级、学号和姓名。"); return; }
+  S.cls=c; S.sid=s; S.name=n;
+  // 用学号哈希决定初始抽题，保证同一学生刷新后题目一致
+  let h=0; for(const ch of s){ h=(h*31+ch.charCodeAt(0))>>>0; }
+  if(!S._seeded){ S.r1=h%CASES1.length; S.r2=(h>>2)%CASES2.length; S.r3=(h>>4)%CASES3.length; S._seeded=true; }
+  save(); showSession();
+}
+function switchAccount(){ localStorage.removeItem("survival_practice"); location.reload(); }
+function resetAll(){ if(confirm("确定清空本机作答记录并重新开始？")) switchAccount(); }
+function showSession(){
+  $("loginGroup").hidden=true; $("sessionInfo").hidden=false; $("practice").hidden=false;
+  $("whoami").textContent = S.cls+" · "+S.sid+" · "+S.name;
+  render1(); render2(); render3();
+}
+
+/* ==================== KM / Log-rank 计算 ==================== */
+function kmCurve(g){ // 返回 [(t, S)]
+  let n=g.length, S_=1, out=[[0,1]];
+  const times=[...new Set(g.filter(x=>x[1]===1).map(x=>x[0]))].sort((a,b)=>a-b);
+  for(const t of times){
+    const atRisk=g.filter(x=>x[0]>=t).length;
+    const ev=g.filter(x=>x[0]===t&&x[1]===1).length;
+    S_*=(1-ev/atRisk); out.push([t,S_]);
+  }
+  return out;
+}
+function medianOf(curve){
+  for(let i=1;i<curve.length;i++){ if(curve[i][1]<=0.5) return curve[i][0]; }
+  return null;
+}
+function logRank(g1,g2){
+  const all=[...new Set(g1.concat(g2).filter(x=>x[1]===1).map(x=>x[0]))].sort((a,b)=>a-b);
+  let O1=0,E1=0,V=0;
+  for(const t of all){
+    const n1=g1.filter(x=>x[0]>=t).length, n2=g2.filter(x=>x[0]>=t).length, n=n1+n2;
+    const d1=g1.filter(x=>x[0]===t&&x[1]===1).length, d2=g2.filter(x=>x[0]===t&&x[1]===1).length, d=d1+d2;
+    if(n<2) continue;
+    E1+=d*n1/n; O1+=d1;
+    V+=d*(n1/n)*(1-n1/n)*(n-d)/(n-1);
+  }
+  const chi=(O1-E1)**2/V;
+  return {chi, p: chi2P(chi,1)};
+}
+function chi2P(x,k){ // 上侧概率（k=1 常用）
+  // Wilson–Hilferty 近似
+  const z=(Math.pow(x/k,1/3)-(1-2/(9*k)))/Math.sqrt(2/(9*k));
+  return 0.5*(1-erf(z/Math.SQRT2));
+}
+function erf(x){ const s=x<0?-1:1; x=Math.abs(x); const a1=0.254829592,a2=-0.284496736,a3=1.421413741,a4=-1.453152027,a5=1.061405429,p=0.3275911;
+  const t=1/(1+p*x); const y=1-(((((a5*t+a4)*t)+a3)*t+a2)*t+a1)*t*Math.exp(-x*x); return s*y; }
+
+/* ==================== 模块01渲染 ==================== */
+function table1(g,label){
+  let h='<table class="data"><tr><th>'+label+'（时间, 事件）</th></tr><tr><td>'+
+    g.map(x=>x[0]+(x[1]?"†":"+") ).join("， ")+"</td></tr></table>"+
+    '<div class="km-note">† 表示发生终点事件；+ 表示删失（失访或随访结束仍存活）。</div>';
+  return h;
+}
+function render1(){
+  const c=CASES1[S.r1];
+  $("case1box").innerHTML="<h3>本人的随机案例 · "+c.title+"</h3><p>"+c.text+"</p>"+
+    table1(c.g1,"试验组")+table1(c.g2,"对照组")+
+    '<p style="font-size:14.5px;color:var(--muted)">请根据数据回答下方问题；需要提示时先思考「继续想一想」，再作答。</p>';
+  // badges
+  $("b1").className = "badge "+(S.done1?"done":"todo"); $("b1").textContent = S.done1?"已完成":"待作答";
+}
+function drawKMSvg(){
+  const c=CASES1[S.r1];
+  const W=640,H=300,pad=48;
+  const tmax=Math.max(...c.g1.map(x=>x[0]),...c.g2.map(x=>x[0]));
+  let s='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">';
+  s+='<rect width="'+W+'" height="'+H+'" fill="#fff"/>';
+  // 网格与坐标
+  for(let i=0;i<=4;i++){const y=pad+ (H-2*pad)*i/4; s+='<line x1="'+pad+'" y1="'+y+'" x2="'+(W-pad)+'" y2="'+y+'" stroke="#e3edf5"/>';
+    s+='<text x="'+(pad-8)+'" y="'+(y+4)+'" text-anchor="end" font-size="11" fill="#455d72">'+(1-i*0.25).toFixed(2)+'</text>';}
+  for(let i=0;i<=5;i++){const x=pad+(W-2*pad)*i/5; s+='<line x1="'+x+'" y1="'+pad+'" x2="'+x+'" y2="'+(H-pad)+'" stroke="#e3edf5"/>';
+    s+='<text x="'+x+'" y="'+(H-pad+16)+'" text-anchor="middle" font-size="11" fill="#455d72">'+Math.round(tmax*i/5)+'</text>';}
+  s+='<text x="'+(W/2)+'" y="'+(H-8)+'" text-anchor="middle" font-size="12" fill="#455d72">时间（月）</text>';
+  s+='<text x="14" y="'+(H/2)+'" font-size="12" fill="#455d72" transform="rotate(-90 14 '+(H/2)+')" text-anchor="middle">生存率</text>';
+  const col=["#17699b","#94354f"];
+  [[c.g1,"试验组"],[c.g2,"对照组"]].forEach((G,gi)=>{
+    const cur=kmCurve(G[0]); let path='M '+pad+' '+pad, cx=pad;
+    for(let i=1;i<cur.length;i++){
+      const t0=cur[i-1][0], t1=cur[i][0], s1=cur[i][1];
+      const x1=pad+(W-2*pad)*t0/tmax, y1=pad+(H-2*pad)*(1-cur[i-1][1]);
+      const x2=pad+(W-2*pad)*t1/tmax, y2=pad+(H-2*pad)*(1-s1);
+      path+=' L '+x1.toFixed(1)+' '+y1.toFixed(1)+' L '+x2.toFixed(1)+' '+y1.toFixed(1)+' L '+x2.toFixed(1)+' '+y2.toFixed(1);
+      cx=x2;
+    }
+    s+='<path d="'+path+'" fill="none" stroke="'+col[gi]+'" stroke-width="2.5"/>';
+  });
+  s+='</svg><div class="legend"><span><b style="background:#17699b"></b>试验组</span><span><b style="background:#94354f"></b>对照组</span></div>';
+  $("kmSvg").innerHTML=s; $("kmSvg").hidden=false;
+}
+function submit1(){
+  const c=CASES1[S.r1];
+  const na=$("mNA").value, v1=$("m1").value, v2=$("m2").value, q2=$("q2").value;
+  if((!v1||!v2)&&!na){ alert("请填写两组中位生存时间（或选择「未达到」选项）。"); return; }
+  if(!q2){ alert("请选择第 2 题的答案。"); return; }
+  const lr=logRank(c.g1,c.g2);
+  const sig=lr.p<0.05;
+  const expAns = "lr_"+(sig?"sig":"ns");
+  let okM=false, okQ=(q2===expAns);
+  let expText="";
+  if(na){ // 需要与数据一致
+    const md1=medianOf(kmCurve(c.g1)), md2=medianOf(kmCurve(c.g2));
+    const expNA = (md1===null&&md2===null)?"a":(md1===null?"b":(md2===null?"b":""));
+    okM = (na===expNA);
+    expText="参考答案：";
+    expText+= (md1===null?"试验组中位生存时间在观察期内未达到":("试验组中位生存时间 ≈ "+md1+" 月"));
+    expText+= (md2===null?"，对照组未达到。":("，对照组 ≈ "+md2+" 月。"));
+  }else{
+    const md1=medianOf(kmCurve(c.g1)), md2=medianOf(kmCurve(c.g2));
+    const ok1=Math.abs(parseFloat(v1)-(md1??-1))<0.15, ok2=Math.abs(parseFloat(v2)-(md2??-1))<0.15;
+    okM=ok1&&ok2;
+    expText="参考答案：试验组 ≈ "+(md1===null?"未达到":md1+" 月")+"，对照组 ≈ "+(md2===null?"未达到":md2+" 月")+"（由 KM 曲线 S(t)=0.5 读出）。";
+  }
+  const allOk = okM&&okQ;
+  const fb=$("fb1"); fb.hidden=false;
+  fb.className="feedback "+(allOk?"ok":"bad");
+  fb.innerHTML=(allOk?"✅ 回答正确！":"❌ 部分回答有误，请对照解析修改后再次提交。")+
+    "<div class='explain'>"+expText+
+    "<br>Log-rank 检验：χ² = "+lr.chi.toFixed(3)+"，P = "+lr.p.toFixed(4)+
+    (sig?" &lt; 0.05，差异有统计学意义：两组生存曲线总体不同。":" ≥ 0.05，尚无统计学证据支持两组生存曲线不同。")+
+    "<br>注意：t 检验忽略删失、χ² 只看单一时点，均不适用于本设计。</div>";
+  S.done1=true; save(); render1();
+}
+
+/* ==================== 模块02渲染 ==================== */
+function render2(){
+  const c=CASES2[S.r2];
+  let tbl='<table class="data">';
+  c.rows.forEach((r,i)=>{ tbl+="<tr>"+r.map((x,j)=>"<"+(i?"td":"th")+">"+x+"</"+(i?"td":"th")+">").join("")+"</tr>"; });
+  tbl+="</table>";
+  $("case2box").innerHTML="<h3>本人的随机案例 · "+c.title+"</h3><p>"+c.ctx+"</p>"+tbl+
+    '<div class="km-note">HR = exp(β)。连续变量按表中「每单位/每规定增量」解释。</div>';
+  // 多选
+  const keys=Object.keys(SIG_LABELS);
+  let h="";
+  keys.forEach(k=>{
+    h+='<label class="opt"><input type="checkbox" name="q31" value="'+k+'"><span>'+SIG_LABELS[k]+'</span></label>';
+  });
+  $("q31opts").innerHTML=h;
+  $("b2").className = "badge "+(S.done2?"done":"todo"); $("b2").textContent = S.done2?"已完成":"待作答";
+}
+function submit2(){
+  const c=CASES2[S.r2];
+  const sel=[...document.querySelectorAll('input[name="q31"]:checked')].map(x=>x.value).sort().join(",");
+  const exp=c.sig.slice().sort().join(",");
+  const a32=$("q32").value, a33=$("q33").value;
+  if(!sel){ alert("请至少勾选一个变量。"); return; }
+  if(!a32||!a33){ alert("请完成第 2、3 题的选择。"); return; }
+  const ok1=sel===exp, ok2=a32==="a", ok3=a33==="a";
+  const allOk=ok1&&ok2&&ok3;
+  const fb=$("fb2"); fb.hidden=false;
+  fb.className="feedback "+(allOk?"ok":"bad");
+  let msg=(allOk?"✅ 回答正确！":"❌ 有错误项，请对照解析。")+"<div class='explain'>";
+  msg+="1. 有统计学意义的变量："+c.sig.map(k=>SIG_LABELS[k]).join("、")+"（P &lt; 0.05）。";
+  msg+="<br>2. HR 是<b>风险比</b>：校正模型中其他变量后，试验组相对对照组的瞬时死亡风险倍数；不是生存时间之比，也不能与 RR、OR 混为一谈。";
+  msg+="<br>3. PH 假定需核查：可用 log(-log S(t)) 曲线平行性、Schoenfeld 残差检验或加入时间交互项；不满足时可分层或加时间依存项，而非一律弃用 Cox。";
+  msg+="</div>";
+  fb.innerHTML=msg;
+  S.done2=true; save(); render2();
+}
+
+/* ==================== 模块03 苏格拉底追问链 ==================== */
+function render3(){
+  const c=CASES3[S.r3];
+  $("case3box").innerHTML="<h3>本人的随机案例 · "+c.title+"</h3><p>"+c.ctx+"</p>";
+  let h="";
+  CHAIN.forEach((step,i)=>{
+    const locked = i>S.stage3;
+    const answered = S.chainState[i]!==undefined;
+    h+='<div class="q" style="'+(locked?"opacity:.5":"")+'">';
+    h+='<div class="qtitle">追问 '+(i+1)+' / '+CHAIN.length+(answered?(S.chainState[i]?" <span class=\"badge done\">通过</span>":""):"")+'</div>';
+    h+='<p style="font-size:15px">'+step.q+'</p>';
+    if(locked){ h+='<p style="font-size:13.5px;color:var(--muted)">🔒 回答完上一问后解锁。</p>'; }
+    else if(!answered){
+      for(const k in step.opts){ h+='<label class="opt"><input type="radio" name="ch'+i+'" value="'+k+'"><span>'+step.opts[k]+'</span></label>'; }
+      h+='<div class="actions"><button class="new-button" onclick="answerChain('+i+')">回答这一问</button></div>';
+    }else{
+      const correct=S.chainState[i];
+      h+='<div class="feedback '+(correct?"ok":"bad")+'" style="margin-top:8px">'+(correct?"✅":"❌")+" 正确答案："+step.ans.toUpperCase()+"　"+step.opts[step.ans]+
+        "<div class='explain'>"+step.why+"<br><i style='color:var(--purple)'>"+step.poke+"</i></div></div>";
+      if(!correct){ h+='<div class="actions"><button class="new-button" onclick="retryChain('+i+')">重新回答这一问</button></div>'; }
+    }
+    h+='</div>';
+  });
+  $("socraticChain").innerHTML=h;
+  $("chainActions").hidden = !(S.stage3>=CHAIN.length);
+  const allPassed = S.chainState.length===CHAIN.length && S.chainState.every(x=>x);
+  $("b3").className = "badge "+(allPassed?"done":(S.chainState.length?"todo":"todo"));
+  $("b3").textContent = allPassed?"已完成":(S.chainState.length?"进行中":"待作答");
+}
+function answerChain(i){
+  const sel=document.querySelector('input[name="ch'+i+'"]:checked');
+  if(!sel){ alert("请先选择一个选项。"); return; }
+  const ok = sel.value===CHAIN[i].ans;
+  S.chainState[i]=ok;
+  if(ok && i===S.stage3) S.stage3++;
+  save(); render3();
+  if(!ok){ const q=$("socraticChain"); q.scrollIntoView({behavior:"smooth",block:"center"}); }
+}
+function retryChain(i){ delete S.chainState[i]; save(); render3(); }
+
+/* ==================== 重抽 ==================== */
+function reroll(){
+  S.r1=Math.floor(Math.random()*CASES1.length);
+  S.r2=Math.floor(Math.random()*CASES2.length);
+  S.r3=Math.floor(Math.random()*CASES3.length);
+  save(); render1(); render2(); render3();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* ==================== 启动 ==================== */
+load();
+if(S.sid){
+  $("cls").value=S.cls||""; $("sid").value=S.sid; $("name").value=S.name||"";
+  showSession();
+}
+</script>
+</body>
+</html>
